@@ -1,0 +1,292 @@
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400..900&display=swap');
+@import url('orion.css');
+@import url('lcars.css');
+/* LCARS Button Pack - CSS puro */
+
+/* ------------- Variables (ajustables) ------------- */
+:root{
+  --lc-bg: #11111a;       /* fondo general del UI (opcional) */
+  --lc-text: #111827;
+  --lc-shadow: rgba(0,0,0,0.45);
+
+  /* Paleta LCARS (puedes cambiar fácilmente aquí) */
+  --lc-amber: #FFCC66;
+  --lc-orange: #FF9966;
+  --lc-violet: #CC99FF;
+  --lc-cyan: #6699FF;
+  --lc-pink: #FF6699;
+  --lc-ink: #2f2f4a;
+
+  /* Tamaños */
+  --lc-btn-h: 42px;
+  --lc-btn-padding-x: 20px;
+  --lc-btn-radius: 14px;
+  --lc-btn-font: 14px/1 "Orbitron", "Segoe UI", Roboto, sans-serif;
+
+  /* Efectos */
+  --lc-glow: 0 6px 20px rgba(100,100,255,0.08);
+  --lc-transition: 200ms cubic-bezier(.2,.9,.3,1);
+}
+
+/* ------------- Base ------------- */
+.lcars-btn{
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  height: var(--lc-btn-h);
+  padding: 0 var(--lc-btn-padding-x);
+  font: var(--lc-btn-font);
+  border: none;
+  cursor: pointer;
+  color: var(--lc-ink);
+  background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(0,0,0,0.06));
+  box-shadow: var(--lc-glow), 0 2px 6px var(--lc-shadow);
+  border-radius: var(--lc-btn-radius);
+  transition: transform var(--lc-transition), box-shadow var(--lc-transition), filter var(--lc-transition);
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* pequeño ajuste para integrarlo con Bootstrap (evitar reset no deseado) */
+.lcars-btn:where(button,input[type="button"],a){display:inline-flex}
+
+/* Colores (modificadores) */
+.lcars-amber{ background: linear-gradient(0deg, rgba(255,204,102,0.16), rgba(255,204,102,0.06)), var(--lc-amber); color: var(--lc-ink); }
+.lcars-orange{ background: linear-gradient(0deg, rgba(255,153,102,0.12), rgba(255,153,102,0.04)), var(--lc-orange); color: var(--lc-ink); }
+.lcars-violet{ background: linear-gradient(0deg, rgba(204,153,255,0.12), rgba(204,153,255,0.04)), var(--lc-violet); color: var(--lc-ink); }
+.lcars-cyan{ background: linear-gradient(0deg, rgba(102,153,255,0.12), rgba(102,153,255,0.04)), var(--lc-cyan); color: var(--lc-ink); }
+.lcars-pink{ background: linear-gradient(0deg, rgba(255,102,153,0.12), rgba(255,102,153,0.04)), var(--lc-pink); color: var(--lc-ink); }
+
+/* Contrast helper para fondos oscuros */
+.lcars-dark{ color: #fff; background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.25)), var(--lc-ink); }
+
+/* ------------- Variantes de forma ------------- */
+
+/* 1) Ochavado (esquinas recortadas diagonalmente) */
+.lcars-ochava{
+  border-radius: 6px;
+  clip-path: polygon(6px 0, calc(100% - 6px) 0, 100% 6px, 100% calc(100% - 6px), calc(100% - 6px) 100%, 6px 100%, 0 calc(100% - 6px), 0 6px);
+  padding-left: 26px;
+  padding-right: 26px;
+}
+
+/* 2) Pill (capsula) */
+.lcars-pill{
+  border-radius: 999px;
+  padding-left: 22px;
+  padding-right: 22px;
+  letter-spacing: 0.6px;
+}
+
+/* 3) Segmentado (izquierda o derecha como los paneles LCARS) */
+.lcars-segment-left, .lcars-segment-right{
+  position: relative;
+  padding-left: 28px;
+  padding-right: 28px;
+  background-size: auto 100%;
+  overflow: visible;
+}
+.lcars-segment-left::before{
+  content:"";
+  position:absolute;
+  left:-18px;
+  top:0;
+  height:100%;
+  width:36px;
+  border-radius: 0 12px 12px 0;
+  background: inherit;
+  box-shadow: none;
+  z-index: -1;
+  transform: translateX(0);
+}
+.lcars-segment-right::after{
+  content:"";
+  position:absolute;
+  right:-18px;
+  top:0;
+  height:100%;
+  width:36px;
+  border-radius: 12px 0 0 12px;
+  background: inherit;
+  box-shadow: none;
+  z-index: -1;
+}
+
+/* 4) Panel (forma más grande, bordes rectos y "marco") */
+.lcars-panel{
+  height: 52px;
+  border-radius: 8px;
+  padding-left: 18px;
+  padding-right: 18px;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.55), inset 0 -2px rgba(0,0,0,0.06);
+  font-weight: 600;
+}
+
+/* 5) Ghost / outline */
+.lcars-ghost{
+  background: transparent;
+  color: var(--lc-amber);
+  border: 2px solid currentColor;
+  box-shadow: none;
+  border-radius: 10px;
+}
+
+/* 6) Icon / circle accent (útil para toolbars) */
+.lcars-icon{
+  height: auto;
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, rgba(255,255,255,0.04), rgba(0,0,0,0.04));
+}
+.lcars-icon svg{ width: 1em; height: 1em; display:block; }
+.lcars-icon--circle{
+  display:inline-block;
+  width:26px;
+  height:26px;
+  border-radius:50%;
+  background: rgba(255,255,255,0.12);
+  margin-right: 8px;
+  flex: 0 0 auto;
+}
+
+/* ------------- Estados: hover, active, focus, disabled ------------- */
+.lcars-btn:hover{
+  transform: translateY(-2px);
+  filter: saturate(1.05) brightness(1.02);
+  box-shadow: 0 10px 28px rgba(0,0,0,0.6), 0 4px 20px rgba(100,100,255,0.06);
+}
+.lcars-btn:active{ transform: translateY(0); filter: saturate(0.98) brightness(0.98); }
+.lcars-btn:focus{
+  outline: 3px solid rgba(102,153,255,0.18);
+  outline-offset: 3px;
+  box-shadow: 0 6px 22px rgba(0,0,0,0.5), 0 0 0 6px rgba(102,153,255,0.04);
+}
+
+/* Disabled */
+.lcars-btn:disabled, .lcars-btn[disabled]{
+  opacity: .45;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+  filter: grayscale(.12);
+}
+
+/* ------------- Tamaños ------------- */
+.lcars-sm{ height: 34px; font-size: 13px; padding: 0 12px; --lc-btn-radius:10px; }
+.lcars-md{ height: 42px; font-size: 14px; padding: 0 18px; }
+.lcars-lg{ height: 52px; font-size: 16px; padding: 0 22px; }
+
+/* ------------- Accesibilidad y preferencias ------------- */
+@media (prefers-reduced-motion: reduce){
+  .lcars-btn{ transition: none; transform: none; }
+}
+
+/* ------------- Integración rápida con iconos (ej.: Bootstrap icons / FontAwesome) ------------- */
+.lcars-btn i, .lcars-btn svg{ font-size: 1.05em; line-height: 1; vertical-align: middle; }
+
+/* ------------- Helpers (alineación de contenedor LCARS) ------------- */
+.lcars-row{ display:flex; gap:10px; align-items:center; flex-wrap:wrap; }
+
+
+
+/* ============================
+   LCARS TITULOS Y CARDS
+   ============================ */
+
+
+:root {
+  --lc-bg-dark: #0b0b15;
+  --lc-text-light: #f4f4fa;
+  --lc-panel: #1a1a2b;
+  --lc-border: rgba(255,255,255,0.05);
+  --lc-accent-amber: #ffcc66;
+  --lc-accent-cyan: #66ccff;
+  --lc-accent-violet: #cc99ff;
+  --lc-accent-pink: #ff6699;
+  --lc-shadow: 0 0 25px rgba(255, 255, 255, 0.06);
+}
+
+/* ---------- TITULOS ---------- */
+.lcars-title {
+  font-family: "Orbitron", sans-serif;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding: 0.5rem 1rem;
+  display: inline-block;
+  background: var(--lc-accent-amber);
+  color: #222;
+  clip-path: polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px);
+  border-radius: 6px;
+  box-shadow: var(--lc-shadow);
+}
+.lcars-title.cyan { background: var(--lc-accent-cyan); }
+.lcars-title.violet { background: var(--lc-accent-violet); }
+.lcars-title.pink { background: var(--lc-accent-pink); }
+
+/* Subtítulo */
+.lcars-subtitle {
+  font-family: "Orbitron", sans-serif;
+  color: var(--lc-accent-cyan);
+  font-size: 1rem;
+  letter-spacing: 0.6px;
+  opacity: 0.8;
+  margin-top: 0.2rem;
+}
+
+/* ---------- CARDS ---------- */
+.card.lcars-card {
+  background: linear-gradient(145deg, rgba(255,255,255,0.03), rgba(0,0,0,0.4)) var(--lc-panel);
+  border: 1px solid var(--lc-border);
+  color: var(--lc-text-light);
+  border-radius: 12px;
+  box-shadow: 0 0 40px rgba(0, 0, 0, 0.5), inset 0 0 20px rgba(255,255,255,0.02);
+  overflow: hidden;
+  position: relative;
+}
+
+/* Header con estilo LCARS (borde superior ochavado) */
+.card.lcars-card .card-header {
+  background: var(--lc-accent-amber);
+  color: #111;
+  font-family: "Orbitron", sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-weight: 600;
+  padding: 0.75rem 1rem;
+  clip-path: polygon(10px 0, 100% 0, 100% 100%, 0 100%, 0 10px);
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+/* Variante de color */
+.card.lcars-card.violet .card-header { background: var(--lc-accent-violet); color: #111; }
+.card.lcars-card.cyan .card-header { background: var(--lc-accent-cyan); color: #111; }
+.card.lcars-card.pink .card-header { background: var(--lc-accent-pink); color: #111; }
+
+/* Body */
+.card.lcars-card .card-body {
+  padding: 1rem 1.2rem;
+  background: rgba(255,255,255,0.02);
+}
+
+/* Footer con bordes inferiores ochavados */
+.card.lcars-card .card-footer {
+  background: var(--lc-accent-amber);
+  color: #111;
+  clip-path: polygon(0 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 10px 100%, 0 calc(100% - 10px));
+  border-top: 1px solid rgba(255,255,255,0.1);
+  font-family: "Orbitron", sans-serif;
+  text-align: right;
+  font-weight: 600;
+  padding: 0.5rem 1rem;
+}
+.card.lcars-card.violet .card-footer { background: var(--lc-accent-violet); }
+.card.lcars-card.cyan .card-footer { background: var(--lc-accent-cyan); }
+.card.lcars-card.pink .card-footer { background: var(--lc-accent-pink); }
+
+/* ---------- EFECTOS ---------- */
+.card.lcars-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 0 50px rgba(255,255,255,0.08);
+  transition: 0.25s ease;
+}
