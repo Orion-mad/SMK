@@ -1,0 +1,268 @@
+<section class="container-fluid p-3 h-100 d-flex flex-column" id="view-contable-cobros">
+  <header class="mb-2 d-flex align-items-center justify-content-between">
+    <div>
+    <h1 class="h4 text-uppercase m-0">
+      <span class="badge bg-warning me-2">LCARS</span> Contable · Cobros
+    </h1>
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb mb-0">
+          <li class="breadcrumb-item"><a href="#/contable">Contable</a></li>
+          <li class="breadcrumb-item active">Cobros</li>
+        </ol>
+      </nav>
+    </div>
+    <div class="d-flex gap-2">
+      <button class="btn btn-outline-primary" id="btn-importar-trabajos" title="Importar pagos de trabajos">
+        <i class="bi bi-arrow-down-circle me-1"></i> Importar Trabajos
+      </button>
+      <button class="btn btn-primary" id="btn-new-cobro">
+        <i class="bi bi-plus-circle me-1"></i> Nuevo Cobro
+      </button>
+    </div>
+  </header>
+
+  <div class="row g-3 flex-grow-1">
+    <div class="col-12 h-100">
+      <div class="card h-100 border-0 shadow-sm rounded-4">
+        <div class="card-header bg-dark text-white d-flex align-items-center justify-content-between flex-wrap gap-2">
+          <span class="text-uppercase lcars-title">Listado de Cobros</span>
+          <div class="d-flex gap-2 flex-wrap">
+            <select class="form-select form-select-sm" id="filter-estado" style="width: auto;">
+              <option value="">Todos los estados</option>
+              <option value="pendiente">Pendientes</option>
+              <option value="parcial">Parciales</option>
+              <option value="pagado">Pagados</option>
+              <option value="vencido">Vencidos</option>
+              <option value="cancelado">Cancelados</option>
+            </select>
+            <select class="form-select form-select-sm" id="filter-tipo" style="width: auto;">
+              <option value="">Todos los tipos</option>
+              <option value="trabajo">Trabajos</option>
+              <option value="servicio">Servicios</option>
+              <option value="otro">Otros</option>
+            </select>
+            <input type="search" class="form-control form-control-sm" placeholder="Buscar..." id="cobros-search" style="width: 200px;">
+          </div>
+        </div>
+        <div class="card-body p-0 h-100" id="cobros-tablewrap">
+          <table class="table table-hover align-middle m-0" id="cobros-table">
+            <thead class="table-light position-sticky top-0" style="z-index: 1;">
+              <tr>
+                <th class="text-nowrap">#</th>
+                <th>Código</th>
+                <th>Nro Factura</th>
+                <th>Cliente</th>
+                <th>Tipo</th>
+                <th>Concepto</th>
+                <th class="text-end">Total</th>
+                <th class="text-end">Pagado</th>
+                <th class="text-end">Saldo</th>
+                <th>Fecha</th>
+                <th>Estado</th>
+                <th class="text-end">Acciones</th>
+              </tr>
+            </thead>
+            <tbody id="cobros-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Edición Cobro -->
+  <div class="modal fade" id="modal-cobro" data-bs-backdrop="static" tabindex="-1">
+    <div class="modal-dialog modal-xl modal-dialog-scrollable">
+      <div class="modal-content rounded-4">
+        <div class="modal-header">
+          <h5 class="modal-title">Cobro / Facturación</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <form id="form-cobro" class="row g-3">
+            <input type="hidden" name="id" id="cobro-id" value="0">
+            
+            <!-- Datos principales -->
+            <div class="col-12"><h6 class="text-primary border-bottom pb-2 mb-0">Datos Principales</h6></div>
+            
+            <div class="col-md-3">
+              <label class="form-label">Código *</label>
+              <input type="text" class="form-control" id="cobro-codigo" placeholder="Auto-generado" readonly>
+              <div class="form-text">Se genera automáticamente</div>
+            </div>
+            
+            <div class="col-md-3">
+              <label class="form-label">Número Factura</label>
+              <input type="text" class="form-control" id="cobro-numero-factura" placeholder="0001-00000001">
+            </div>
+            
+            <div class="col-md-3">
+              <label class="form-label">Fecha Emisión *</label>
+              <input type="date" class="form-control" id="cobro-fecha-emision" required>
+            </div>
+            
+            <div class="col-md-3">
+              <label class="form-label">Fecha Vencimiento</label>
+              <input type="date" class="form-control" id="cobro-fecha-vencimiento">
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label">Cliente</label>
+              <select class="form-select" id="cobro-cliente-id">
+                <option value="">-- Sin cliente --</option>
+              </select>
+            </div>
+
+            <div class="col-md-3">
+              <label class="form-label">Tipo *</label>
+              <select class="form-select" id="cobro-tipo" required>
+                <option value="trabajo">Trabajo</option>
+                <option value="servicio">Servicio</option>
+                <option value="otro">Otro</option>
+              </select>
+            </div>
+
+            <div class="col-md-3">
+              <label class="form-label">Estado *</label>
+              <select class="form-select" id="cobro-estado" required>
+                <option value="pendiente">Pendiente</option>
+                <option value="parcial">Parcial</option>
+                <option value="pagado">Pagado</option>
+                <option value="vencido">Vencido</option>
+                <option value="cancelado">Cancelado</option>
+              </select>
+            </div>
+
+            <div class="col-12">
+              <label class="form-label">Concepto *</label>
+              <input type="text" class="form-control" id="cobro-concepto" required placeholder="Descripción del cobro">
+            </div>
+
+            <!-- Referencias opcionales -->
+            <div class="col-12"><h6 class="text-primary border-bottom pb-2 mb-0 mt-2">Referencias</h6></div>
+
+            <div class="col-md-6">
+              <label class="form-label">Trabajo (opcional)</label>
+              <select class="form-select" id="cobro-trabajo-id">
+                <option value="">-- Sin trabajo asociado --</option>
+              </select>
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label">Servicio (opcional)</label>
+              <select class="form-select" id="cobro-servicio-id">
+                <option value="">-- Sin servicio asociado --</option>
+              </select>
+            </div>
+
+            <!-- Importes -->
+            <div class="col-12"><h6 class="text-primary border-bottom pb-2 mb-0 mt-2">Importes</h6></div>
+
+            <div class="col-md-2">
+              <label class="form-label">Moneda *</label>
+              <select class="form-select" id="cobro-moneda" required>
+                <option value="ARS">ARS</option>
+                <option value="USD">USD</option>
+                <option value="EUR">EUR</option>
+              </select>
+            </div>
+
+            <div class="col-md-2">
+              <label class="form-label">Subtotal *</label>
+              <input type="number" step="0.01" class="form-control text-end" id="cobro-subtotal" value="0" required>
+            </div>
+
+            <div class="col-md-2">
+              <label class="form-label">Descuento</label>
+              <input type="number" step="0.01" class="form-control text-end" id="cobro-descuento" value="0">
+            </div>
+
+            <div class="col-md-2">
+              <label class="form-label">Impuestos</label>
+              <input type="number" step="0.01" class="form-control text-end" id="cobro-impuestos" value="0">
+            </div>
+
+            <div class="col-md-2">
+              <label class="form-label fw-bold">Total</label>
+              <input type="number" step="0.01" class="form-control text-end fw-bold" id="cobro-total" value="0" readonly>
+            </div>
+
+            <div class="col-md-2">
+              <label class="form-label">Orden</label>
+              <input type="number" class="form-control text-end" id="cobro-orden" value="0">
+            </div>
+
+            <!-- AFIP -->
+            <div class="col-12"><h6 class="text-primary border-bottom pb-2 mb-0 mt-2">AFIP / Facturación Electrónica</h6></div>
+
+            <div class="col-md-3">
+              <label class="form-label">CAE</label>
+              <input type="text" class="form-control" id="cobro-afip-cae" placeholder="CAE de AFIP">
+            </div>
+
+            <div class="col-md-3">
+              <label class="form-label">Vencimiento CAE</label>
+              <input type="date" class="form-control" id="cobro-afip-vencimiento-cae">
+            </div>
+
+            <div class="col-md-3">
+              <label class="form-label">Tipo Comprobante</label>
+              <select class="form-select" id="cobro-afip-tipo">
+                <option value="">-- Sin tipo --</option>
+                <option value="S">S - Sin Factura</option>
+                <option value="C">C - Factura C</option>
+              </select>
+            </div>
+
+            <div class="col-md-3">
+              <label class="form-label">Punto de Venta</label>
+              <input type="number" class="form-control text-end" id="cobro-afip-punto-venta" placeholder="0001">
+            </div>
+
+            <!-- Observaciones -->
+            <div class="col-12">
+              <label class="form-label">Observaciones</label>
+              <textarea class="form-control" id="cobro-observaciones" rows="2"></textarea>
+            </div>
+
+            <!-- Items del cobro -->
+            <div class="col-12 mt-3">
+              <div class="d-flex justify-content-between align-items-center mb-2">
+                <h6 class="text-primary border-bottom pb-2 mb-0 flex-grow-1">Items del Cobro</h6>
+                <button type="button" class="btn btn-sm btn-outline-primary" id="btn-add-item">
+                  <i class="bi bi-plus-circle"></i> Agregar Item
+                </button>
+              </div>
+              <div id="items-list"></div>
+            </div>
+
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+          <button type="button" class="btn btn-primary" id="btn-save-cobro">Guardar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Importar Trabajos -->
+  <div class="modal fade" id="modal-importar-trabajos" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content rounded-4">
+        <div class="modal-header">
+          <h5 class="modal-title">Importar Pagos de Trabajos Pendientes</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <p class="text-muted">Seleccione los pagos de trabajos que desea incluir en un nuevo cobro:</p>
+          <div id="trabajos-pendientes-list" class="list-group"></div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+          <button type="button" class="btn btn-primary" id="btn-crear-cobro-trabajos">Crear Cobro</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</section>

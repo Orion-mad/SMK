@@ -1,0 +1,168 @@
+<!-- /views/parametros/planes.html -->
+<section class="container-fluid p-3" id="view-planes">
+  <header class="mb-3 d-flex align-items-center justify-content-between">
+    <div>
+      <h1 class="h4 text-uppercase m-0">
+        <span class="badge bg-warning me-2">LCARS</span> Planes de Sistemas
+      </h1>
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb mb-0">
+          <li class="breadcrumb-item"><a href="#/parametros">Parámetros</a></li>
+          <li class="breadcrumb-item active">Planes</li>
+        </ol>
+      </nav>
+    </div>
+    <button class="btn btn-primary" id="btn-new-plan">
+      <i class="bi bi-plus-lg me-2"></i>Nuevo Plan
+    </button>
+  </header>
+
+  <!-- Tabla de planes -->
+  <div class="card border-0 shadow-sm">
+    <div class="card-header bg-dark text-white">
+      <i class="bi bi-table me-2"></i>Listado de Planes
+    </div>
+    <div class="card-body p-0">
+      <div class="table-responsive">
+        <table class="table table-hover table-striped mb-0">
+          <thead class="table-light">
+            <tr>
+              <th style="width: 60px;">ID</th>
+              <th style="width: 120px;">Código</th>
+              <th>Nombre</th>
+              <th class="text-end" style="width: 120px;">P. Mensual</th>
+              <th class="text-end" style="width: 120px;">P. Anual</th>
+              <th style="width: 80px;">Moneda</th>
+              <th style="width: 80px;">Activo</th>
+              <th class="text-end" style="width: 180px;">Acciones</th>
+            </tr>
+          </thead>
+          <tbody id="planes-tbody">
+            <tr>
+              <td colspan="8" class="text-center p-4">
+                <div class="spinner-border text-primary" role="status">
+                  <span class="visually-hidden">Cargando...</span>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Modal para crear/editar plan -->
+<div class="modal fade" id="modal-plan" tabindex="-1" aria-labelledby="modalPlanLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <div class="modal-header bg-dark text-white">
+        <h5 class="modal-title" id="modalPlanLabel">
+          <i class="bi bi-box-seam me-2"></i>Plan de Sistema
+        </h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form id="form-plan">
+          <input type="hidden" id="plan-id" value="0">
+          
+          <div class="row g-3">
+            <!-- Columna izquierda -->
+            <div class="col-md-6">
+              <div class="mb-3">
+                <label for="plan-codigo" class="form-label">Código *</label>
+                <input type="text" class="form-control" id="plan-codigo" required maxlength="64">
+                <small class="text-muted">Identificador único del plan</small>
+              </div>
+
+              <div class="mb-3">
+                <label for="plan-nombre" class="form-label">Nombre *</label>
+                <input type="text" class="form-control" id="plan-nombre" required maxlength="128">
+              </div>
+
+              <div class="mb-3">
+                <label for="plan-descripcion" class="form-label">Descripción</label>
+                <textarea class="form-control" id="plan-descripcion" rows="3" maxlength="500"></textarea>
+              </div>
+
+              <div class="mb-3">
+                <label class="form-label">Moneda *</label>
+                <div class="btn-group w-100" role="group">
+                  <input type="radio" class="btn-check" name="plan-moneda" id="moneda-arg" value="ARG" checked>
+                  <label class="btn btn-outline-primary" for="moneda-arg">
+                    <i class="bi bi-currency-dollar me-1"></i>ARG
+                  </label>
+
+                  <input type="radio" class="btn-check" name="plan-moneda" id="moneda-dol" value="DOL">
+                  <label class="btn btn-outline-primary" for="moneda-dol">
+                    <i class="bi bi-currency-dollar me-1"></i>USD
+                  </label>
+
+                  <input type="radio" class="btn-check" name="plan-moneda" id="moneda-eur" value="EUR">
+                  <label class="btn btn-outline-primary" for="moneda-eur">
+                    <i class="bi bi-currency-euro me-1"></i>EUR
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <!-- Columna derecha -->
+            <div class="col-md-6">
+              <div class="mb-3">
+                <label for="plan-pm" class="form-label">Precio Mensual</label>
+                <div class="input-group">
+                  <span class="input-group-text">$</span>
+                  <input type="number" class="form-control" id="plan-pm" value="0" min="0" step="0.01">
+                </div>
+              </div>
+
+              <div class="mb-3">
+                <label for="plan-pa" class="form-label">Precio Anual</label>
+                <div class="input-group">
+                  <span class="input-group-text">$</span>
+                  <input type="number" class="form-control" id="plan-pa" value="0" min="0" step="0.01">
+                </div>
+              </div>
+
+              <div class="mb-3">
+                <label for="plan-orden" class="form-label">Orden de visualización</label>
+                <input type="number" class="form-control" id="plan-orden" value="0" min="0">
+                <small class="text-muted">Orden en el que aparecerá en listados</small>
+              </div>
+
+              <div class="mb-3">
+                <div class="form-check form-switch">
+                  <input class="form-check-input" type="checkbox" id="plan-activo" checked>
+                  <label class="form-check-label" for="plan-activo">
+                    <strong>Plan Activo</strong>
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Features/Características -->
+          <div class="mt-4">
+            <div class="d-flex align-items-center justify-content-between mb-3">
+              <h6 class="mb-0">
+                <i class="bi bi-list-check me-2"></i>Características del Plan
+              </h6>
+              <button type="button" class="btn btn-sm btn-outline-primary" id="btn-add-feature">
+                <i class="bi bi-plus-lg me-1"></i>Agregar Característica
+              </button>
+            </div>
+            <div id="features-list" class="border rounded p-3">
+              <!-- Features dinámicas se insertan aquí -->
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        <button type="button" class="btn btn-primary" id="btn-save-plan">
+          <i class="bi bi-save me-2"></i>Guardar Plan
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

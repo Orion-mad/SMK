@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <dwsync>
-<file name="login.php" server="W:/orion/" local="134053578211166341" remote="134053578210000000" Dst="0" />
-<file name="logout.php" server="W:/orion/" local="134034680946285033" remote="134034680940000000" Dst="0" />
-<file name="seed_admin.php" server="W:/orion/" local="134034646988512976" remote="134034646980000000" Dst="0" />
-<file name="session.php" server="W:/orion/" local="134034641333465136" remote="134034641330000000" Dst="0" />
-<file name="bootstrap.php" server="W:/orion/" local="134034680009929979" remote="134034680000000000" Dst="0" />
+<file name="bootstrap.php" server="W:/orion/" local="134034680000000000" remote="134034680000000000" Dst="0" />
+<file name="login.php" server="W:/orion/" local="134053578210000000" remote="134053578210000000" Dst="0" />
+<file name="logout.php" server="W:/orion/" local="134034680940000000" remote="134034680940000000" Dst="0" />
 </dwsync>

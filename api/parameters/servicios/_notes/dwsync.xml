@@ -1,16 +1,8 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <dwsync>
-<file name="list.php" server="W:/orion/" local="134037920460368697" remote="134037920460000000" Dst="0" />
-<file name="save.php" server="W:/orion/" local="134048601332952369" remote="134048601330000000" Dst="0" />
-<file name="cliente_tarifa_list.php" server="W:/orion/" local="134035482130561206" remote="134035482130000000" Dst="0" />
-<file name="cliente_tarifa_save.php" server="W:/orion/" local="134035482316618276" remote="134035482310000000" Dst="0" />
-<file name="cotizar.php" server="W:/orion/" local="134035480908680449" remote="134035480900000000" Dst="0" />
-<file name="get.php" server="W:/orion/" local="134040648932681693" remote="134040648930000000" Dst="0" />
-<file name="planes_list.php" server="W:/orion/" local="134035726406641126" remote="134035726400000000" Dst="0" />
-<file name="planes_save.php" server="W:/orion/" local="134035481317184015" remote="134035481310000000" Dst="0" />
-<file name="tarifas_list.php" server="W:/orion/" local="134035481499351146" remote="134035481490000000" Dst="0" />
-<file name="tarifas_save.php" server="W:/orion/" local="134035481666538513" remote="134035481660000000" Dst="0" />
-<file name="clientes_planes_list.php" server="W:/orion/" local="134037315723009148" remote="134037315720000000" Dst="0" />
-<file name="delete.php" server="W:/orion/" local="134037463061033448" remote="134037463060000000" Dst="0" />
-<file name="select.php" server="W:/orion/" local="134053493619885546" remote="134053493610000000" Dst="0" />
+<file name="delete.php" server="W:/orion/" local="134037463060000000" remote="134037463060000000" Dst="0" />
+<file name="get.php" server="W:/orion/" local="134040648930000000" remote="134040648930000000" Dst="0" />
+<file name="list.php" server="W:/orion/" local="134037920460000000" remote="134037920460000000" Dst="0" />
+<file name="save.php" server="W:/orion/" local="134048601330000000" remote="134048601330000000" Dst="0" />
+<file name="select.php" server="W:/orion/" local="134053493610000000" remote="134053493610000000" Dst="0" />
 </dwsync>

@@ -1,9 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <dwsync>
-<file name="app.js" server="W:/orion/" local="134052629300309252" remote="134052629300000000" Dst="0" />
-<file name="router.js" server="W:/orion/" local="134056401299949679" remote="134056401290000000" Dst="0" />
-<file name="http.js" server="W:/orion/" local="134033922762771954" remote="134033922760000000" Dst="0" />
-<file name="ui.js" server="W:/orion/" local="134033879019678967" remote="134033879010000000" Dst="0" />
-<file name="auth.js" server="W:/orion/" local="134033922853520550" remote="134033922850000000" Dst="0" />
-<file name="dsm.js" server="W:/orion/" local="134052639550620121" remote="134052639550000000" Dst="0" />
+<file name="app.js" server="W:/orion/" local="134052629300000000" remote="134052629300000000" Dst="0" />
+<file name="dsm.js" server="W:/orion/" local="134052639550000000" remote="134052639550000000" Dst="0" />
+<file name="router.js" server="W:/orion/" local="134056401290000000" remote="134056401290000000" Dst="0" />
 </dwsync>

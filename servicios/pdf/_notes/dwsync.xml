@@ -1,7 +1,41 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <dwsync>
-<file name="PresupuestoPDF.php" server="W:/orion/" local="134046668846014995" remote="134046668840000000" Dst="0" />
-<file name="presupuestos.php" server="W:/orion/" local="134002638450000000" remote="134002638450000000" Dst="0" />
+<file name="contrato.php" server="W:/orion/" local="133943187750000000" remote="133943187750000000" Dst="0" />
+<file name="debug_data.txt" server="W:/orion/" local="134045097000000000" remote="134045097000000000" Dst="0" />
+<file name="debug_json.txt" server="W:/orion/" local="134045092020000000" remote="134045092020000000" Dst="0" />
+<file name="documentacion.php" server="W:/orion/" local="134045021600000000" remote="134045021600000000" Dst="0" />
 <file name="documento.php" server="W:/orion/" local="133980157080000000" remote="133980157080000000" Dst="0" />
-<file name="TrabajoPDF.php" server="W:/orion/" local="134047644265983323" remote="134047644260000000" Dst="0" />
+<file name="documento_presupuesto.php" server="W:/orion/" local="134045104670000000" remote="134045104670000000" Dst="0" />
+<file name="docWriteHTML.php" server="W:/orion/" local="134005162910000000" remote="134005162910000000" Dst="0" />
+<file name="factura - Copia.php" server="W:/orion/" local="134005162910000000" remote="134005162910000000" Dst="0" />
+<file name="factura.php" server="W:/orion/" local="133993887080000000" remote="133993887080000000" Dst="0" />
+<file name="facturaLoteA.php" server="W:/orion/" local="133993886980000000" remote="133993886980000000" Dst="0" />
+<file name="facturaLoteB.php" server="W:/orion/" local="133946677960000000" remote="133946677960000000" Dst="0" />
+<file name="facturaLoteDets.php" server="W:/orion/" local="133949257350000000" remote="133949257350000000" Dst="0" />
+<file name="facturaLoteFCE.php" server="W:/orion/" local="133946678200000000" remote="133946678200000000" Dst="0" />
+<file name="facturaUnicaA.php" server="W:/orion/" local="133993886920000000" remote="133993886920000000" Dst="0" />
+<file name="facturaUnicaB.php" server="W:/orion/" local="133993886880000000" remote="133993886880000000" Dst="0" />
+<file name="facturaUnicaFCE.php" server="W:/orion/" local="133943190080000000" remote="133943190080000000" Dst="0" />
+<file name="factura_ondemand.php" server="W:/orion/" local="133993887030000000" remote="133993887030000000" Dst="0" />
+<file name="fpdf.css" server="W:/orion/" local="133885234800000000" remote="133885234800000000" Dst="0" />
+<file name="fpdf.php" server="W:/orion/" local="133885234800000000" remote="133885234800000000" Dst="0" />
+<file name="guardar_factura.php" server="W:/orion/" local="134031287910000000" remote="134031287910000000" Dst="0" />
+<file name="guardar_nc.php" server="W:/orion/" local="133983543940000000" remote="133983543940000000" Dst="0" />
+<file name="index.php" server="W:/orion/" local="134005162910000000" remote="134005162910000000" Dst="0" />
+<file name="manual.php" server="W:/orion/" local="133958748320000000" remote="133958748320000000" Dst="0" />
+<file name="PresupuestoPDF.php" server="W:/orion/" local="134046668840000000" remote="134046668840000000" Dst="0" />
+<file name="presupuestos.php" server="W:/orion/" local="134002638450000000" remote="134002638450000000" Dst="0" />
+<file name="qr.png" server="W:/orion/" local="134040018340000000" remote="134040018340000000" Dst="0" />
+<file name="recibo - Copia.php" server="W:/orion/" local="134005162920000000" remote="134005162920000000" Dst="0" />
+<file name="recibo.php" server="W:/orion/" local="134005162920000000" remote="134005162920000000" Dst="0" />
+<file name="remito.php" server="W:/orion/" local="134005162920000000" remote="134005162920000000" Dst="0" />
+<file name="test_pdf.php" server="W:/orion/" local="134045103730000000" remote="134045103730000000" Dst="0" />
+<file name="TrabajoPDF.php" server="W:/orion/" local="134047644260000000" remote="134047644260000000" Dst="0" />
+<file name="vista_factura.php" server="W:/orion/" local="134033674700000000" remote="134033674700000000" Dst="0" />
+<file name="vista_factura_fce.php" server="W:/orion/" local="133947476400000000" remote="133947476400000000" Dst="0" />
+<file name="vista_nc.php" server="W:/orion/" local="133956112300000000" remote="133956112300000000" Dst="0" />
+<file name="Write2HTML.php" server="W:/orion/" local="134045104740000000" remote="134045104740000000" Dst="0" />
+<file name="WriteHTML.php" server="W:/orion/" local="133965455960000000" remote="133965455960000000" Dst="0" />
+<file name="WriteHTMLdocs.php" server="W:/orion/" local="134025005460000000" remote="134025005460000000" Dst="0" />
+<file name="writeTablesIa.php" server="W:/orion/" local="134025043090000000" remote="134025043090000000" Dst="0" />
 </dwsync>

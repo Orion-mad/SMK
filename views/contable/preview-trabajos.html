@@ -1,0 +1,67 @@
+<section class="container-fluid p-3 h-100 d-flex flex-column" id="view-preview-trabajos">
+  <header class="mb-2 d-flex align-items-center justify-content-between">
+    <h1 class="h4 text-uppercase m-0">
+      <span class="badge bg-warning me-2">LCARS</span> Pagos de Trabajos - Vista Previa
+    </h1>
+    <div class="d-flex gap-2">
+      <button class="btn btn-success" id="btn-migrar-todos" title="Migrar todos los pagos pendientes">
+        <i class="bi bi-arrow-down-circle me-1"></i> Migrar Todos a Cobros
+      </button>
+      <a href="#/contable/cobros" class="btn btn-outline-secondary">
+        <i class="bi bi-arrow-left me-1"></i> Volver a Cobros
+      </a>
+    </div>
+  </header>
+
+  <div class="alert alert-info">
+    <i class="bi bi-info-circle me-2"></i>
+    <strong>Vista temporal:</strong> Esta vista muestra los pagos de trabajos en <code>prm_trabajos_pagos</code>. 
+    Use "Migrar Todos" para convertirlos en cobros en <code>cnt_cobros</code>.
+  </div>
+
+  <div class="row g-3 flex-grow-1">
+    <div class="col-12 h-100">
+      <div class="card h-100 border-0 shadow-sm rounded-4">
+        <div class="card-header bg-dark text-white d-flex align-items-center justify-content-between flex-wrap gap-2">
+          <span class="text-uppercase">Pagos de Trabajos (prm_trabajos_pagos)</span>
+          <div class="d-flex gap-2">
+            <select class="form-select form-select-sm" id="filter-estado" style="width: auto;">
+              <option value="">Todos los estados</option>
+              <option value="pendiente">Pendiente</option>
+              <option value="pagado">Pagado</option>
+            </select>
+            <input type="search" class="form-control form-control-sm" placeholder="Buscar..." id="preview-search" style="width: 200px;">
+          </div>
+        </div>
+        <div class="card-body p-0 h-100">
+          <table class="table table-hover align-middle m-0">
+            <thead class="table-light position-sticky top-0" style="z-index: 1;">
+              <tr>
+                <th>#</th>
+                <th>Trabajo</th>
+                <th>Cliente</th>
+                <th>Fecha Pago</th>
+                <th class="text-end">Monto</th>
+                <th>Medio Pago</th>
+                <th>Referencia</th>
+                <th>Estado</th>
+                <th>Migrado</th>
+              </tr>
+            </thead>
+            <tbody id="preview-tbody"></tbody>
+          </table>
+        </div>
+        <div class="card-footer">
+          <div class="row">
+            <div class="col-md-6">
+              <strong>Total registros:</strong> <span id="stat-total">0</span>
+            </div>
+            <div class="col-md-6 text-end">
+              <strong>Pendientes de migrar:</strong> <span id="stat-pendientes" class="badge bg-warning">0</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

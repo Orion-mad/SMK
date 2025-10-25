@@ -1,0 +1,288 @@
+<section class="container-fluid p-3 h-100 d-flex flex-column" id="view-clientes-clientes">
+  <header class="mb-2 d-flex align-items-center justify-content-between">
+    <div>
+    <h1 class="h4 text-uppercase m-0">
+      <span class="badge bg-warning me-2">LCARS</span> Cuentas · Clientes
+    </h1>
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb mb-0">
+          <li class="breadcrumb-item"><a href="#/clientes">Cuentas</a></li>
+          <li class="breadcrumb-item active">Clientes</li>
+        </ol>
+      </nav>
+    </div>
+    <div>
+      <button class="btn btn-primary" id="btn-new-cliente">
+        <i class="bi bi-plus-circle me-1"></i> Nuevo Cliente
+      </button>
+    </div>
+  </header>
+
+  <div class="row g-3 flex-grow-1">
+    <div class="col-12 h-100">
+      <div class="card h-100 border-0 shadow-sm rounded-4">
+        <div class="card-header bg-dark text-white d-flex align-items-center justify-content-between">
+          <span class="text-uppercase">Listado de Clientes</span>
+          <div class="d-flex gap-2">
+            <select class="form-select form-select-sm" id="filter-estado" style="width: auto;">
+              <option value="">Todos</option>
+              <option value="1" selected>Activos</option>
+              <option value="0">Inactivos</option>
+            </select>
+            <select class="form-select form-select-sm" id="filter-condicion" style="width: auto;">
+              <option value="">Todas condiciones</option>
+              <option value="CONTADO">Contado</option>
+              <option value="CTA_CTE">Cta. Cte.</option>
+              <option value="MIXTA">Mixta</option>
+            </select>
+            <input type="search" class="form-control form-control-sm" placeholder="Buscar..." id="clientes-search">
+          </div>
+        </div>
+        <div class="card-body p-0">
+          <table class="table table-hover align-middle m-0">
+            <thead class="table-light position-sticky top-0" style="z-index: 1;">
+              <tr>
+                <th>#</th>
+                <th>Código</th>
+                <th>Razón Social</th>
+                <th>Nombre Contacto</th>
+                <th>Documento</th>
+                <th>IVA</th>
+                <th>Email</th>
+                <th>Servicio</th>
+                <th>Cond. Venta</th>
+                <th>Estado</th>
+                <th class="text-end">Acciones</th>
+              </tr>
+            </thead>
+            <tbody id="clientes-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Edición -->
+  <div class="modal fade" id="modal-cliente" data-bs-backdrop="static" tabindex="-1">
+    <div class="modal-dialog modal-xl modal-dialog-scrollable">
+      <div class="modal-content rounded-4">
+        <div class="modal-header">
+          <h5 class="modal-title">Cliente</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <form id="form-cliente" class="row g-3">
+            <input type="hidden" name="id" id="cliente-id" value="0">
+            
+            <!-- Datos Básicos -->
+            <div class="col-12">
+              <h6 class="border-bottom pb-2 mb-3">Datos Básicos</h6>
+            </div>
+
+            <div class="col-md-3">
+              <label class="form-label">Código *</label>
+              <input type="text" class="form-control" id="cliente-codigo" placeholder="Auto-generado" readonly>
+              <div class="form-text">Se genera automáticamente</div>
+            </div>
+
+            <div class="col-md-9">
+              <label class="form-label">Razón Social *</label>
+              <input type="text" class="form-control" id="cliente-razon-social" required>
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label">Nombre Fantasía</label>
+              <input type="text" class="form-control" id="cliente-nombre-fantasia">
+            </div>
+
+            <div class="col-md-3">
+              <label class="form-label">Tipo Doc *</label>
+              <select class="form-select" id="cliente-tipo-doc" required>
+                <option value="CUIT">CUIT</option>
+                <option value="DNI">DNI</option>
+                <option value="CUIL">CUIL</option>
+                <option value="PAS">Pasaporte</option>
+              </select>
+            </div>
+
+            <div class="col-md-3">
+              <label class="form-label">Nro. Documento *</label>
+              <input type="text" class="form-control" id="cliente-nro-doc" required>
+            </div>
+
+            <!-- Datos Fiscales -->
+            <div class="col-12">
+              <h6 class="border-bottom pb-2 mb-3 mt-2">Datos Fiscales</h6>
+            </div>
+
+            <div class="col-md-3">
+              <label class="form-label">Condición IVA *</label>
+              <select class="form-select" id="cliente-iva-cond" required>
+                <option value="RI">Responsable Inscripto</option>
+                <option value="RNI">Responsable No Inscripto</option>
+                <option value="MT">Monotributo</option>
+                <option value="EX">Exento</option>
+                <option value="CF">Consumidor Final</option>
+                <option value="NC">No Categorizado</option>
+              </select>
+            </div>
+
+            <div class="col-md-3">
+              <label class="form-label">Cond. IIBB</label>
+              <select class="form-select" id="cliente-iibb-cond">
+                <option value="">--</option>
+                <option value="Local">Local</option>
+                <option value="CM">Convenio Multilateral</option>
+                <option value="Exento">Exento</option>
+                <option value="No inscripto">No Inscripto</option>
+              </select>
+            </div>
+
+            <div class="col-md-3">
+              <label class="form-label">Nro. IIBB</label>
+              <input type="text" class="form-control" id="cliente-iibb-nro">
+            </div>
+
+            <div class="col-md-3">
+              <label class="form-label">Inicio Actividad</label>
+              <input type="date" class="form-control" id="cliente-inicio-act">
+            </div>
+
+            <!-- Contacto -->
+            <div class="col-12">
+              <h6 class="border-bottom pb-2 mb-3 mt-2">Datos de Contacto</h6>
+            </div>
+
+            <div class="col-md-4">
+              <label class="form-label">Email</label>
+              <input type="email" class="form-control" id="cliente-email">
+            </div>
+
+            <div class="col-md-2">
+              <label class="form-label">Teléfono</label>
+              <input type="text" class="form-control" id="cliente-telefono">
+            </div>
+
+            <div class="col-md-2">
+              <label class="form-label">Celular</label>
+              <input type="text" class="form-control" id="cliente-celular">
+            </div>
+
+            <div class="col-md-4">
+              <label class="form-label">Sitio Web</label>
+              <input type="text" class="form-control" id="cliente-web">
+            </div>
+
+            <div class="col-md-4">
+              <label class="form-label">Contacto (Nombre)</label>
+              <input type="text" class="form-control" id="cliente-contacto-nombre">
+            </div>
+
+            <div class="col-md-4">
+              <label class="form-label">Contacto (Email)</label>
+              <input type="email" class="form-control" id="cliente-contacto-email">
+            </div>
+
+            <div class="col-md-4">
+              <label class="form-label">Contacto (Tel)</label>
+              <input type="text" class="form-control" id="cliente-contacto-tel">
+            </div>
+
+            <!-- Dirección -->
+            <div class="col-12">
+              <h6 class="border-bottom pb-2 mb-3 mt-2">Dirección</h6>
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label">Dirección</label>
+              <input type="text" class="form-control" id="cliente-direccion">
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label">Dirección 2</label>
+              <input type="text" class="form-control" id="cliente-direccion2">
+            </div>
+
+            <div class="col-md-4">
+              <label class="form-label">Localidad</label>
+              <input type="text" class="form-control" id="cliente-localidad">
+            </div>
+
+            <div class="col-md-3">
+              <label class="form-label">Provincia</label>
+              <input type="text" class="form-control" id="cliente-provincia">
+            </div>
+
+            <div class="col-md-3">
+              <label class="form-label">País</label>
+              <input type="text" class="form-control" id="cliente-pais" value="Argentina">
+            </div>
+
+            <div class="col-md-2">
+              <label class="form-label">CP</label>
+              <input type="text" class="form-control" id="cliente-cp">
+            </div>
+
+            <!-- Comercial -->
+            <div class="col-12">
+              <h6 class="border-bottom pb-2 mb-3 mt-2">Datos Comerciales</h6>
+            </div>
+
+            <div class="col-md-3">
+              <label class="form-label">Moneda Preferida</label>
+              <select class="form-select" id="cliente-moneda">
+                <option value="ARG">Pesos Argentinos</option>
+                <option value="DOL">Dólares</option>
+                <option value="EUR">Euros</option>
+              </select>
+            </div>
+
+            <div class="col-md-5">
+              <label class="form-label">Servicio Contratado</label>
+              <select class="form-select" id="cliente-servicio">
+                <option value="">-- Sin servicio --</option>
+              </select>
+              <div class="form-text" id="servicio-info"></div>
+            </div>
+
+            <div class="col-md-4">
+              <label class="form-label">Condición de Venta</label>
+              <select class="form-select" id="cliente-condicion-venta">
+                <option value="CONTADO">Contado</option>
+                <option value="CTA_CTE">Cuenta Corriente</option>
+                <option value="MIXTA">Mixta</option>
+              </select>
+            </div>
+
+            <div class="col-md-3">
+              <label class="form-label">Plazo Pago (días)</label>
+              <input type="number" class="form-control" id="cliente-plazo-pago" value="0">
+            </div>
+
+            <div class="col-md-3">
+              <label class="form-label">Tope Crédito</label>
+              <input type="number" step="0.01" class="form-control" id="cliente-tope-credito">
+            </div>
+
+            <div class="col-md-2">
+              <label class="form-label">Estado</label>
+              <select class="form-select" id="cliente-estado">
+                <option value="1">Activo</option>
+                <option value="0">Inactivo</option>
+              </select>
+            </div>
+
+            <div class="col-12">
+              <label class="form-label">Observaciones</label>
+              <textarea class="form-control" id="cliente-obs" rows="2"></textarea>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+          <button type="button" class="btn btn-primary" id="btn-save-cliente">Guardar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
