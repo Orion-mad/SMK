@@ -1,2 +1,2 @@
 # SMK
-Sisterma de gestión de Sysmika/Orion
+Sistema de gestión de Sysmika/Orion
