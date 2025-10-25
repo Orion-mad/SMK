@@ -1,0 +1,130 @@
+<section class="container-fluid p-3 h-100 d-flex flex-column" id="view-param-servicios">
+  <header class="mb-2 d-flex align-items-center justify-content-between">
+    <div>
+      <h1 class="h4 text-uppercase m-0"> <span class="badge bg-warning me-2">LCARS</span> Parámetros · Servicios </h1>
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb mb-0">
+          <li class="breadcrumb-item"><a href="#/parametros">Parámetros</a></li>
+          <li class="breadcrumb-item active">Servicios</li>
+        </ol>
+      </nav>
+    </div>
+    <div>
+      <button class="btn btn-primary" id="btn-new-servicio"> <i class="bi bi-plus-circle me-1"></i> Nuevo Servicio </button>
+    </div>
+  </header>
+  <div class="row g-3 flex-grow-1">
+    <div class="col-12 h-100">
+      <div class="card h-100 border-0 shadow-sm rounded-4">
+        <div class="card-header bg-dark text-white d-flex align-items-center justify-content-between"> <span class="text-uppercase">Listado de Servicios</span>
+          <div class="d-flex gap-2">
+            <select class="form-select form-select-sm" id="filter-estado" style="width: auto;">
+              <option value="">Todos los estados</option>
+              <option value="activo">Activos</option>
+              <option value="suspendido">Suspendidos</option>
+              <option value="cancelado">Cancelados</option>
+            </select>
+            <input type="search" class="form-control form-control-sm" placeholder="Buscar..." id="servicios-search">
+          </div>
+        </div>
+        <div class="card-body p-0" id="servicios-tablewrap">
+          <table class="table table-hover align-middle m-0" id="servicios-table">
+            <thead class="table-light position-sticky top-0" style="z-index: 1;">
+              <tr>
+                <th class="text-nowrap">#</th>
+                <th>Código</th>
+                <th>Nombre</th>
+                <th>Plan Base</th>
+                <th class="text-end">Precio USD</th>
+                <th>Tipo Cobro</th>
+                <th>Inicio</th>
+                <th>Estado</th>
+                <th class="text-end">Acciones</th>
+              </tr>
+            </thead>
+            <tbody id="servicios-tbody">
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Modal Edición -->
+  <div class="modal fade" id="modal-servicio" data-bs-backdrop="static" tabindex="-1">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+      <div class="modal-content rounded-4">
+        <div class="modal-header">
+          <h5 class="modal-title">Servicio</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form id="form-servicio" class="row g-3">
+            <input type="hidden" name="id" id="servicio-id" value="0">
+            <div class="col-6">
+              <label class="form-label">Código *</label>
+              <input type="text" class="form-control" name="codigo" id="servicio-codigo" placeholder="Auto-generado" readonly>
+              <div class="form-text">Se genera automáticamente</div>
+            </div>
+            <div class="col-6">
+              <label class="form-label">Nombre *</label>
+              <input type="text" class="form-control" name="nombre" id="servicio-nombre" required>
+            </div>
+            <div class="col-12">
+              <label class="form-label">Plan Base *</label>
+              <select class="form-select" name="plan_id" id="servicio-plan-id" required>
+                <option value="">-- Seleccionar Plan --</option>
+              </select>
+              <div class="form-text" id="plan-info"></div>
+            </div>
+            <div class="col-12">
+              <label class="form-label">Descripción</label>
+              <textarea class="form-control" name="descripcion" id="servicio-descripcion" rows="2"></textarea>
+            </div>
+            <div class="col-4">
+              <label class="form-label">Precio USD *</label>
+              <input type="number" step="0.01" class="form-control text-end" name="precio_usd" id="servicio-precio-usd" value="0" required>
+              <div class="form-text">Precio a cobrar al cliente</div>
+            </div>
+            <div class="col-4">
+              <label class="form-label">Tipo de Cobro *</label>
+              <select class="form-select" name="tipo_cobro" id="servicio-tipo-cobro" required>
+                <option value="mensual">Mensual</option>
+                <option value="anual">Anual</option>
+              </select>
+            </div>
+            <div class="col-4">
+              <label class="form-label">Fecha Inicio</label>
+              <input type="date" class="form-control" name="fecha_inicio" id="servicio-fecha-inicio">
+            </div>
+            <div class="col-4">
+              <label class="form-label">Estado *</label>
+              <select class="form-select" name="estado" id="servicio-estado" required>
+                <option value="activo">Activo</option>
+                <option value="suspendido">Suspendido</option>
+                <option value="cancelado">Cancelado</option>
+              </select>
+            </div>
+            <div class="col-4">
+              <label class="form-label">Orden</label>
+              <input type="number" class="form-control text-end" name="orden" id="servicio-orden" value="0">
+            </div>
+            <div class="col-12">
+              <label class="form-label">Observaciones</label>
+              <textarea class="form-control" name="observaciones" id="servicio-observaciones" rows="2"></textarea>
+            </div>
+            <hr>
+            <div class="col-12">
+              <h6 class="m-0">Características del Plan (heredadas)</h6>
+              <div id="features-list" class="mt-2 text-muted"> <small>Seleccione un plan para ver sus características</small> </div>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+          <button type="button" class="btn btn-primary" id="btn-save-servicio">Guardar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,230 @@
+<section class="container-fluid p-3 h-100 d-flex flex-column" id="view-contable-servicios">
+  <header class="mb-2 d-flex align-items-center justify-content-between">
+    <div>
+    <h1 class="h4 text-uppercase m-0">
+      <span class="badge bg-warning me-2">LCARS</span> Contable · Servicios
+    </h1>
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb mb-0">
+          <li class="breadcrumb-item"><a href="#/contable">Contable</a></li>
+          <li class="breadcrumb-item active">Servicios</li>
+        </ol>
+      </nav>
+    </div>
+    <div class="d-flex gap-2">
+      <button class="btn btn-outline-secondary" id="btn-refresh-servicios">
+        <i class="bi bi-arrow-clockwise me-1"></i> Actualizar
+      </button>
+    </div>
+  </header>
+
+
+  <div class="row g-3 flex-grow-1">
+    <div class="col-12 h-100">
+      <div class="card h-100 border-0 shadow-sm rounded-4">
+        <div class="card-header bg-dark text-white d-flex align-items-center justify-content-between">
+          <span class="text-uppercase">
+            <i class="bi bi-hdd-network me-2"></i>Clientes con Servicios Activos
+          </span>
+          <div class="d-flex gap-2">
+            <input type="search" class="form-control form-control-sm" placeholder="Buscar cliente..." id="servicios-search" style="width: 250px;">
+          </div>
+        </div>
+        <div class="card-body p-0 h-100" id="servicios-tablewrap">
+          <table class="table table-hover align-middle m-0" id="servicios-table">
+            <thead class="table-light position-sticky top-0" style="z-index: 1;">
+              <tr>
+                <th class="text-nowrap">Cliente</th>
+                <th>Servicio</th>
+                <th class="text-end">Precio USD</th>
+                <th class="text-center">Tipo Cobro</th>
+                <th class="text-center">Último Cobro</th>
+                <th class="text-center">Estado</th>
+                <th class="text-end">Acciones</th>
+              </tr>
+            </thead>
+            <tbody id="servicios-tbody">
+              <tr>
+                <td colspan="7" class="text-center p-4 text-muted">Cargando...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Crear/Editar Cobro -->
+  <div class="modal fade" id="modal-cobro" data-bs-backdrop="static" tabindex="-1">
+    <div class="modal-dialog modal-xl modal-dialog-scrollable">
+      <div class="modal-content rounded-4">
+        <div class="modal-header bg-dark text-white">
+          <h5 class="modal-title">
+            <i class="bi bi-receipt me-2"></i>
+            <span id="modal-title-text">Nuevo Cobro</span>
+          </h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form id="form-cobro" class="row g-3">
+            <input type="hidden" name="id" id="cobro-id" value="0">
+            <input type="hidden" name="cliente_id" id="cobro-cliente-id">
+            <input type="hidden" name="servicio_id" id="cobro-servicio-id">
+            <input type="hidden" name="tipo" id="cobro-tipo" value="servicio">
+
+            <!-- Información del Cliente (readonly) -->
+            <div class="col-12">
+              <div class="alert alert-info mb-0">
+                <div class="row">
+                  <div class="col-md-6">
+                    <strong>Cliente:</strong> <span id="info-cliente-nombre">-</span><br>
+                    <strong>Documento:</strong> <span id="info-cliente-doc">-</span>
+                  </div>
+                  <div class="col-md-6">
+                    <strong>Servicio:</strong> <span id="info-servicio-nombre">-</span><br>
+                    <strong>Tipo de Cobro:</strong> <span id="info-tipo-cobro">-</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <hr class="my-2">
+
+            <!-- Código (auto-generado) -->
+            <div class="col-md-4">
+              <label class="form-label">Código</label>
+              <input type="text" class="form-control" name="codigo" id="cobro-codigo" placeholder="Auto-generado" readonly>
+              <div class="form-text">Se genera automáticamente</div>
+            </div>
+
+            <!-- Número de Factura -->
+            <div class="col-md-4">
+              <label class="form-label">Número de Factura</label>
+              <input type="text" class="form-control" name="numero_factura" id="cobro-numero-factura" placeholder="Ej: 0001-00000123">
+              <div class="form-text">Opcional, se genera al facturar</div>
+            </div>
+
+            <!-- Concepto -->
+            <div class="col-md-4">
+              <label class="form-label">Concepto *</label>
+              <input type="text" class="form-control" name="concepto" id="cobro-concepto" required>
+            </div>
+
+            <!-- Fecha de Emisión -->
+            <div class="col-md-4">
+              <label class="form-label">Fecha de Emisión *</label>
+              <input type="date" class="form-control" name="fecha_emision" id="cobro-fecha-emision" required>
+            </div>
+
+            <!-- Fecha de Vencimiento -->
+            <div class="col-md-4">
+              <label class="form-label">Fecha de Vencimiento</label>
+              <input type="date" class="form-control" name="fecha_vencimiento" id="cobro-fecha-vencimiento">
+            </div>
+
+            <!-- Estado -->
+            <div class="col-md-4">
+              <label class="form-label">Estado *</label>
+              <select class="form-select" name="estado" id="cobro-estado" required>
+                <option value="pendiente">Pendiente</option>
+                <option value="parcial">Parcial</option>
+                <option value="pagado">Pagado</option>
+                <option value="vencido">Vencido</option>
+                <option value="cancelado">Cancelado</option>
+              </select>
+            </div>
+
+            <hr class="my-2">
+
+            <!-- Información de Montos -->
+            <div class="col-12">
+              <h6 class="text-uppercase text-muted">Información de Montos</h6>
+            </div>
+
+            <!-- Precio USD (readonly) -->
+            <div class="col-md-3">
+              <label class="form-label">Precio USD</label>
+              <div class="input-group">
+                <span class="input-group-text">$</span>
+                <input type="text" class="form-control text-end" id="cobro-precio-usd" readonly>
+              </div>
+            </div>
+
+            <!-- Cotización del Día (readonly) -->
+            <div class="col-md-3">
+              <label class="form-label">Cotización USD</label>
+              <div class="input-group">
+                <span class="input-group-text">$</span>
+                <input type="text" class="form-control text-end" id="cobro-cotizacion" readonly>
+              </div>
+            </div>
+
+            <!-- Subtotal ARS -->
+            <div class="col-md-3">
+              <label class="form-label">Subtotal *</label>
+              <div class="input-group">
+                <span class="input-group-text">$</span>
+                <input type="number" step="0.01" class="form-control text-end" name="subtotal" id="cobro-subtotal" required>
+              </div>
+            </div>
+
+            <!-- Descuento -->
+            <div class="col-md-3">
+              <label class="form-label">Descuento</label>
+              <div class="input-group">
+                <span class="input-group-text">$</span>
+                <input type="number" step="0.01" class="form-control text-end" name="descuento" id="cobro-descuento" value="0">
+              </div>
+            </div>
+
+            <!-- Impuestos -->
+            <div class="col-md-3">
+              <label class="form-label">Impuestos</label>
+              <div class="input-group">
+                <span class="input-group-text">$</span>
+                <input type="number" step="0.01" class="form-control text-end" name="impuestos" id="cobro-impuestos" value="0">
+              </div>
+            </div>
+
+            <!-- Total ARS -->
+            <div class="col-md-3">
+              <label class="form-label fw-bold">Total *</label>
+              <div class="input-group">
+                <span class="input-group-text">$</span>
+                <input type="number" step="0.01" class="form-control text-end fw-bold" name="total" id="cobro-total" required readonly>
+              </div>
+            </div>
+
+            <!-- Moneda -->
+            <div class="col-md-3">
+              <label class="form-label">Moneda</label>
+              <input type="text" class="form-control" name="moneda" id="cobro-moneda" value="ARS" readonly>
+            </div>
+
+            <hr class="my-2">
+
+            <!-- Observaciones -->
+            <div class="col-12">
+              <label class="form-label">Observaciones</label>
+              <textarea class="form-control" name="observaciones" id="cobro-observaciones" rows="3"></textarea>
+              <div class="form-text">Se agregará automáticamente la información del monto en USD y cotización</div>
+            </div>
+
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+          <button type="button" class="btn btn-outline-info" id="btn-proforma-cobro" disabled>
+            <i class="bi bi-file-earmark-text me-1"></i> Proforma
+          </button>
+          <button type="button" class="btn btn-outline-success" id="btn-facturar-cobro" disabled>
+            <i class="bi bi-receipt-cutoff me-1"></i> Facturar ARCA
+          </button>
+          <button type="button" class="btn btn-primary" id="btn-save-cobro">
+            <i class="bi bi-save me-1"></i> Guardar
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

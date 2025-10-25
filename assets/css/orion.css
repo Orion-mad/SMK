@@ -1,0 +1,57 @@
+/* ===== Layout 100% pantalla sin overflow global ===== */
+:root {
+    --topbar-h: 52px; 
+    --topdiv-h: 60px; 
+}
+
+/* Documento sin scroll global */
+html, body { height: 100%; overflow: hidden; }
+/* Evitar que sombras/bordes generen overflow accidental */
+body { margin: 0; }
+
+/* Fallback + soporte móvil moderno */
+#app-main {
+  /* 100% de altura de ventana, incluyendo móviles (svh/dvh) */
+  height: calc(100svh - var(--topdiv-h)); /* navegadores modernos */
+  height: calc(100dvh - var(--topdiv-h)); /* alternativo */
+  height: calc(100vh - var(--topdiv-h));  /* fallback */
+  display: grid;
+  grid-template-rows: var(--topbar-h) 1fr;
+  min-height: 0; /* importante para permitir scroll del hijo */
+  overflow-x: auto;
+}
+
+/* Topbar con altura fija */
+#topbar { height: var(--topbar-h); }
+
+/* Capa principal de vistas: el scroll vive acá */
+#vista {
+  min-height: 0;  /* necesario cuando el padre es grid/flex */
+  -webkit-overflow-scrolling: touch;
+  padding: 1rem;  /* si preferís margen interno */
+  height: calc(100vh - var(--topdiv-h));
+  overflow: hidden;
+}
+textarea.form-control{
+    min-height: 250px!important;
+}
+
+/* Opcional: que los paneles no “crezcan” de más */
+.container-fluid, .row, .col, section { min-height: 0; }
+
+/* Tablas y listas dentro de la capa: sin forzar doble scroll */
+.glass .table-responsive { overflow: visible; }
+
+/* Si querés scroll interno SÓLO en una zona (ej. tabla grande):
+   envolverla con .scroll-area y definir alto máximo relativo */
+.scroll-area {
+  overflow: auto;
+  max-height: 60vh;       /* o calc(100% - 160px) según tu header interno */
+  -webkit-overflow-scrolling: touch;
+}
+
+.glass {
+  background: rgba(255, 255, 255, 0.15); /* fondo semitransparente */
+  backdrop-filter: blur(10px);            /* difuminado del fondo */
+  -webkit-backdrop-filter: blur(10px);    /* soporte Safari */
+}

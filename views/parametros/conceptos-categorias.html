@@ -1,0 +1,137 @@
+<section class="container-fluid p-3 h-100 d-flex flex-column" id="view-conceptos-categorias">
+  <header class="mb-2 d-flex align-items-center justify-content-between">
+    <h1 class="h4 text-uppercase m-0">
+      <span class="badge bg-warning me-2">LCARS</span> Parámetros · Categorías de Conceptos
+    </h1>
+    <div class="d-flex gap-2">
+      <a href="#/parametros/conceptos" class="btn btn-outline-secondary">
+        <i class="bi bi-arrow-left"></i> Volver a Conceptos
+      </a>
+      <button class="btn btn-primary" id="btn-new-categoria">
+        <i class="bi bi-plus-circle me-1"></i> Nueva Categoría
+      </button>
+    </div>
+  </header>
+
+  <div class="row g-3 flex-grow-1">
+    <div class="col-12 h-100">
+      <div class="card h-100 border-0 shadow-sm rounded-4">
+        <div class="card-header bg-dark text-white d-flex align-items-center justify-content-between">
+          <span class="text-uppercase">Listado de Categorías</span>
+          <div class="d-flex gap-2">
+            <select class="form-select form-select-sm" id="filter-tipo-flujo" style="width: auto;">
+              <option value="">Todos los tipos</option>
+              <option value="ingreso">Ingresos</option>
+              <option value="egreso">Egresos</option>
+              <option value="ambos">Ambos</option>
+            </select>
+            <select class="form-select form-select-sm" id="filter-activo" style="width: auto;">
+              <option value="">Todos</option>
+              <option value="1">Activos</option>
+              <option value="0">Inactivos</option>
+            </select>
+            <input type="search" class="form-control form-control-sm" placeholder="Buscar..." id="categorias-search">
+          </div>
+        </div>
+        <div class="card-body p-0">
+          <table class="table table-hover align-middle m-0" id="categorias-table">
+            <thead class="table-light position-sticky top-0" style="z-index: 1;">
+              <tr>
+                <th style="width: 50px;">#</th>
+                <th style="width: 120px;">Código</th>
+                <th style="width: 50px;"></th>
+                <th>Nombre</th>
+                <th style="width: 120px;">Tipo Flujo</th>
+                <th style="width: 100px;" class="text-center">Conceptos</th>
+                <th style="width: 80px;">Orden</th>
+                <th style="width: 100px;">Estado</th>
+                <th style="width: 180px;" class="text-end">Acciones</th>
+              </tr>
+            </thead>
+            <tbody id="categorias-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Edición -->
+  <div class="modal fade" id="modal-categoria" data-bs-backdrop="static" tabindex="-1">
+    <div class="modal-dialog modal-dialog-scrollable">
+      <div class="modal-content rounded-4">
+        <div class="modal-header">
+          <h5 class="modal-title">Categoría de Concepto</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form id="form-categoria" class="row g-3">
+            <input type="hidden" name="id" id="categoria-id" value="0">
+            
+            <div class="col-12">
+              <label class="form-label">Código *</label>
+              <input type="text" class="form-control" name="codigo" id="categoria-codigo" placeholder="Auto-generado" readonly>
+              <div class="form-text">Se genera automáticamente</div>
+            </div>
+
+            <div class="col-12">
+              <label class="form-label">Nombre *</label>
+              <input type="text" class="form-control" name="nombre" id="categoria-nombre" required>
+            </div>
+
+            <div class="col-12">
+              <label class="form-label">Descripción</label>
+              <textarea class="form-control" name="descripcion" id="categoria-descripcion" rows="2"></textarea>
+            </div>
+
+            <div class="col-6">
+              <label class="form-label">Tipo de Flujo *</label>
+              <select class="form-select" name="tipo_flujo" id="categoria-tipo-flujo" required>
+                <option value="ingreso">Ingreso</option>
+                <option value="egreso">Egreso</option>
+                <option value="ambos">Ambos</option>
+              </select>
+            </div>
+
+            <div class="col-6">
+              <label class="form-label">Orden</label>
+              <input type="number" class="form-control text-end" name="orden" id="categoria-orden" value="0">
+            </div>
+
+            <div class="col-6">
+              <label class="form-label">Color *</label>
+              <input type="color" class="form-control form-control-color" name="color" id="categoria-color" value="#6c757d">
+              <div class="form-text">Para visualización en UI</div>
+            </div>
+
+            <div class="col-6">
+              <label class="form-label">Icono (Bootstrap Icons)</label>
+              <div class="input-group">
+                <span class="input-group-text"><i id="icono-preview" class="bi bi-tag"></i></span>
+                <input type="text" class="form-control" name="icono" id="categoria-icono" value="bi-tag" placeholder="bi-tag">
+              </div>
+              <div class="form-text">Ej: bi-cash, bi-cart, bi-people</div>
+            </div>
+
+            <div class="col-12">
+              <div class="form-check form-switch">
+                <input class="form-check-input" type="checkbox" id="categoria-activo" name="activo" checked>
+                <label class="form-check-label" for="categoria-activo">Activo</label>
+              </div>
+            </div>
+
+            <div class="col-12">
+              <div class="alert alert-info mb-0">
+                <i class="bi bi-info-circle me-2"></i>
+                <small>Las categorías agrupan conceptos de caja por su naturaleza (ingresos, egresos o ambos)</small>
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+          <button type="button" class="btn btn-primary" id="btn-save-categoria">Guardar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
