@@ -1,0 +1,325 @@
+<!doctype html>
+<html lang="es" data-bs-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Orion | LCARS UI</title>
+
+  <!-- PWA -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#ff9966">
+  <link rel="apple-touch-icon" href="assets/img/icons/icon-192.png">
+
+  <!-- Bootstrap 5.3 + Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+
+  <!-- LCARS CSS -->
+  <link href="assets/css/lcars.css" rel="stylesheet">
+</head>
+<body class="lcars-bg">
+
+  <!-- Topbar -->
+  <header class="lcars-topbar border-bottomnavbar navbar-dark bg-dark position-sticky top-0 w-100 shadow-sm">
+    <div class="container-fluid d-flex align-items-center justify-content-between gap-3 py-2">
+      <div class="d-flex align-items-center gap-2">
+        <button class="btn btn-sm btn-outline-light d-lg-none" data-bs-toggle="offcanvas" data-bs-target="#lcarsSidebar">
+          <i class="bi bi-list"></i>
+        </button>
+        <div class="lcars-brand d-flex align-items-center gap-2">
+          <span class="lcars-pill lcars-color-a"></span>
+            <img src="assets/img/logos/orion.png" height="35px" alt="Orion">
+          <strong class="text-uppercase">Orion Suite</strong>
+          <span class="small text-secondary">LCARS UI</span>
+        </div>
+      </div>
+
+      <div class="d-none d-md-flex align-items-center gap-2 flex-wrap">
+        <span class="badge text-bg-warning text-uppercase">Stardate <span id="stardate">—</span></span>
+        <span class="badge text-bg-info text-uppercase">Estado: <span class="fw-semibold">Operativo</span></span>
+        <span class="badge text-bg-primary text-uppercase" id="user-badge"><i class="bi bi-person-circle me-1"></i> Invitado</span>
+      </div>
+
+      <div class="dropdown">
+        <button class="btn btn-outline-light btn-sm dropdown-toggle" data-bs-toggle="dropdown">
+          <i class="bi bi-gear"></i>
+        </button>
+        <ul class="dropdown-menu dropdown-menu-end  position-absolute  z-3">
+          <li><a class="dropdown-item" href="#/perfil"><i class="bi bi-person me-2"></i>Perfil</a></li>
+          <li><a class="dropdown-item" href="#/ajustes"><i class="bi bi-sliders me-2"></i>Ajustes</a></li>
+          <li><hr class="dropdown-divider"></li>
+          <li><a class="dropdown-item text-danger" id="btnLogout"><i class="bi bi-box-arrow-right me-2"></i>Salir</a></li>
+        </ul>
+      </div>
+    </div>
+  </header>
+
+  <!-- Sidebar (offcanvas en móvil) -->
+<aside class="offcanvas offcanvas-start offcanvas-lg lcars-sidebar" tabindex="-1" id="lcarsSidebar">
+
+    <div class="offcanvas-header">
+      <h5 class="offcanvas-title text-uppercase">Navegación</h5>
+      <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Cerrar"></button>
+    </div>
+    <div class="offcanvas-body d-flex flex-column gap-2">
+      <div class="lcars-arch lcars-color-b mb-2"></div>
+
+      <nav class="nav flex-column gap-1">
+        <a class="nav-link lcars-link" href="#/dashboard"><i class="bi bi-speedometer2 me-2"></i>Dashboard</a>
+        <a class="nav-link lcars-link" href="#/listado"><i class="bi bi-table me-2"></i>Listado</a>
+        <a class="nav-link lcars-link" href="#/nuevo"><i class="bi bi-file-earmark-plus me-2"></i>Nuevo</a>
+        <a class="nav-link lcars-link" href="#/tarjetas"><i class="bi bi-grid-3x3-gap me-2"></i>Tarjetas</a>
+        <a class="nav-link lcars-link" href="#/ajustes"><i class="bi bi-sliders me-2"></i>Ajustes</a>
+        <a class="nav-link lcars-link" href="#/login"><i class="bi bi-door-open me-2"></i>Login</a>
+      </nav>
+
+      <div class="mt-auto mx-1">
+        <div class="lcars-status p-2">
+          <div class="d-flex justify-content-between small">
+            <span>CPU</span><span id="meter-cpu">34%</span>
+          </div>
+          <div class="progress lcars-progress" role="progressbar" aria-valuenow="34" aria-valuemin="0" aria-valuemax="100">
+            <div class="progress-bar" style="width:34%"></div>
+          </div>
+          <div class="d-flex justify-content-between small mt-1">
+            <span>NET</span><span id="meter-net">OK</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main -->
+  <main id="app-main" class="lcars-main container-fluid py-3">
+    <!-- El router inyecta aquí -->
+  </main>
+
+  <!-- ======= Templates de Vistas ======= -->
+
+  <!-- Login -->
+<template id="tpl-login">
+  <section class="row justify-content-center">
+    <div class="col-12 col-md-7 col-lg-5">
+      <div class="card lcars-card p-0 overflow-hidden">
+        <div class="lcars-card-head lcars-color-a">
+          <div class="h5 m-0 text-uppercase">Acceso</div>
+          <small>Autenticación requerida</small>
+        </div>
+        <div class="card-body p-4">
+          <form id="form-login" class="needs-validation" novalidate>
+            <div class="mb-3">
+              <label class="form-label">Usuario</label>
+              <input type="text" name="user" class="form-control" required autocomplete="username">
+              <div class="invalid-feedback">Ingresá tu usuario.</div>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Contraseña</label>
+              <div class="input-group">
+                <input type="password" name="pass" id="login-pass" class="form-control" required autocomplete="current-password">
+                <button class="btn btn-outline-light" type="button" id="toggle-pass">
+                  <i class="bi bi-eye"></i>
+                </button>
+                <div class="invalid-feedback">Ingresá tu contraseña.</div>
+              </div>
+            </div>
+            <div class="d-flex justify-content-between align-items-center">
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="remember">
+                <label class="form-check-label" for="remember">Recordarme</label>
+              </div>
+              <button class="btn btn-lg lcars-btn lcars-color-b" type="submit">
+                <i class="bi bi-unlock me-2"></i>Ingresar
+              </button>
+            </div>
+          </form>
+        </div>
+        <div class="lcars-card-foot lcars-color-c"></div>
+      </div>
+    </div>
+  </section>
+</template>
+
+
+  <!-- Dashboard -->
+  <template id="tpl-dashboard">
+    <section class="lcars-section">
+      <div class="lcars-section-head lcars-color-b">
+        <div class="h5 m-0 text-uppercase">Panel de Control</div>
+        <small>Estado general del sistema</small>
+      </div>
+
+      <div class="row g-3 mt-1">
+        <div class="col-12 col-md-6 col-xl-3">
+          <div class="card lcars-card h-100">
+            <div class="lcars-card-head lcars-color-c"><div class="text-uppercase">Sesiones</div></div>
+            <div class="card-body">
+              <div class="display-6 fw-bold" id="kpi-sessions">128</div>
+              <div class="small text-secondary">en las últimas 24 hs</div>
+            </div>
+            <div class="lcars-card-foot lcars-color-a"></div>
+          </div>
+        </div>
+        <div class="col-12 col-md-6 col-xl-3">
+          <div class="card lcars-card h-100">
+            <div class="lcars-card-head lcars-color-a"><div class="text-uppercase">Órdenes</div></div>
+            <div class="card-body">
+              <div class="display-6 fw-bold" id="kpi-orders">76</div>
+              <div class="small text-secondary">hoy</div>
+            </div>
+            <div class="lcars-card-foot lcars-color-b"></div>
+          </div>
+        </div>
+        <div class="col-12 col-md-6 col-xl-3">
+          <div class="card lcars-card h-100">
+            <div class="lcars-card-head lcars-color-b"><div class="text-uppercase">Errores</div></div>
+            <div class="card-body">
+              <div class="display-6 fw-bold" id="kpi-errors">3</div>
+              <div class="small text-secondary">últimas 2 hs</div>
+            </div>
+            <div class="lcars-card-foot lcars-color-c"></div>
+          </div>
+        </div>
+        <div class="col-12 col-md-6 col-xl-3">
+          <div class="card lcars-card h-100">
+            <div class="lcars-card-head lcars-color-d"><div class="text-uppercase">Latencia</div></div>
+            <div class="card-body">
+              <div class="display-6 fw-bold" id="kpi-latency">82ms</div>
+              <div class="small text-secondary">promedio</div>
+            </div>
+            <div class="lcars-card-foot lcars-color-a"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </template>
+
+  <!-- Listado -->
+  <template id="tpl-listado">
+    <section class="lcars-section">
+      <div class="lcars-section-head lcars-color-a">
+        <div class="h5 m-0 text-uppercase">Listado</div>
+        <small>Registros disponibles</small>
+      </div>
+
+      <div class="card lcars-card mt-2">
+        <div class="card-body">
+          <div class="d-flex gap-2 flex-wrap align-items-center">
+            <div class="input-group w-auto">
+              <span class="input-group-text"><i class="bi bi-search"></i></span>
+              <input type="search" id="q" class="form-control" placeholder="Buscar…">
+            </div>
+            <div class="ms-auto">
+              <a class="btn lcars-btn lcars-color-b" href="#/nuevo"><i class="bi bi-plus-lg me-2"></i>Nuevo</a>
+            </div>
+          </div>
+
+          <div class="table-responsive mt-3">
+            <table class="table table-dark table-hover align-middle lcars-table">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Fecha</th>
+                  <th>Paciente</th>
+                  <th>Proceso</th>
+                  <th>Estado</th>
+                  <th class="text-end">Acciones</th>
+                </tr>
+              </thead>
+              <tbody id="grid-listado">
+                <!-- filas -->
+              </tbody>
+            </table>
+          </div>
+
+          <nav class="mt-3">
+            <ul class="pagination pagination-sm m-0">
+              <li class="page-item disabled"><a class="page-link">Prev</a></li>
+              <li class="page-item active"><a class="page-link">1</a></li>
+              <li class="page-item"><a class="page-link">2</a></li>
+              <li class="page-item"><a class="page-link">3</a></li>
+              <li class="page-item"><a class="page-link">Next</a></li>
+            </ul>
+          </nav>
+        </div>
+        <div class="lcars-card-foot lcars-color-c"></div>
+      </div>
+    </section>
+  </template>
+
+  <!-- Edición / Nuevo -->
+  <template id="tpl-edicion">
+    <section class="lcars-section">
+      <div class="lcars-section-head lcars-color-b">
+        <div class="h5 m-0 text-uppercase" id="edit-title">Nuevo registro</div>
+        <small>Completar y guardar</small>
+      </div>
+
+      <form id="form-edicion" class="card lcars-card mt-2 needs-validation" novalidate>
+        <div class="card-body">
+          <div class="row g-3">
+            <div class="col-md-4">
+              <label class="form-label">Fecha</label>
+              <input type="date" name="fecha" class="form-control" required>
+              <div class="invalid-feedback">Elegí una fecha.</div>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Paciente</label>
+              <select name="paciente" class="form-select" required>
+                <option value="">Seleccionar…</option>
+                <option value="1">Paciente #1</option>
+                <option value="2">Paciente #2</option>
+              </select>
+              <div class="invalid-feedback">Seleccioná un paciente.</div>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Estado</label>
+              <select name="estado" class="form-select">
+                <option>entrada</option>
+                <option>proceso</option>
+                <option>salida</option>
+              </select>
+            </div>
+
+            <div class="col-12">
+              <label class="form-label">Proceso</label>
+              <input type="text" name="proceso" class="form-control" placeholder="Descripción…">
+            </div>
+
+            <div class="col-12">
+              <label class="form-label">Notas</label>
+              <textarea name="notas" class="form-control" rows="4"></textarea>
+            </div>
+          </div>
+        </div>
+        <div class="lcars-card-foot lcars-color-a d-flex justify-content-end gap-2 p-2">
+          <a href="#/listado" class="btn btn-outline-light"><i class="bi bi-x-lg me-1"></i>Cancelar</a>
+          <button class="btn lcars-btn lcars-color-b" type="submit"><i class="bi bi-check2 me-1"></i>Guardar</button>
+        </div>
+      </form>
+    </section>
+  </template>
+
+  <!-- Tarjetas -->
+  <template id="tpl-tarjetas">
+    <section class="lcars-section">
+      <div class="lcars-section-head lcars-color-c">
+        <div class="h5 m-0 text-uppercase">Tarjetas</div>
+        <small>Visual estilo LCARS</small>
+      </div>
+
+      <div class="row g-3 mt-1" id="cards-zone">
+        <!-- tarjetas -->
+      </div>
+    </section>
+  </template>
+
+  <!-- ======= /Templates ======= -->
+
+  <!-- Bootstrap Bundle -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+  <!-- App scripts -->
+  <script src="assets/js/router.js"></script>
+  <script src="assets/js/app.js"></script>
+</body>
+</html>
