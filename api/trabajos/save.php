@@ -20,10 +20,9 @@ try {
 
   // Autogenerar código si no viene (solo en alta)
   lcars_autocodigo($db, 'prm_trabajos', $input, 'codigo', 'id', 'TRB');
-
   // Calcular saldo inicial = total
   if (!isset($input['id']) || $input['id'] === 0) {
-   // $input['saldo'] = $input['total'] ?? 0;
+    $input['saldo'] = $input['total'] ?? 0;
   }
 
   $cfg = [

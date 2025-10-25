@@ -19,8 +19,8 @@ const ROUTES = {
     
     '#/contable':                       'views/contable.html',
     '#/contable/cobros':                'views/contable/cobros.html',
+    '#/contable/trabajos':              'views/contable/trabajos.html',
     '#/contable/servicios':             'views/contable/servicios.html',
-    '#/contable/preview-trabajos':      'views/contable/preview-trabajos.html',
   };
     
   function normalizeHash(h) {

@@ -1,8 +1,7 @@
 // assets/js/modules/contable.index.js
 (() => {
   const API = { 
-    summary: '/api/contable/summary.php',
-    trabajosPendientes: '/api/contable/cobros/trabajos-pendientes.php'
+    summary: '/api/contable/summary.php'
   };
 
   function here() {
@@ -26,7 +25,7 @@
     if (el) el.textContent = value;
   }
 
-  let charts = { cobrosEstado: null, cobrosEvolucion: null, serviciosEstado: null };
+  let charts = { cobrosEstado: null, cobrosEvolucion: null, serviciosEstado: null, trabajosEstado: null };
 
   function destroyCharts() {
     Object.keys(charts).forEach(k => {
@@ -84,6 +83,39 @@
             data.suspendidos || 0
           ],
           backgroundColor: ['#198754', '#ffc107', '#dc3545']
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: true,
+        aspectRatio: 1,
+        plugins: {
+          legend: { 
+            position: 'bottom', 
+            labels: { boxWidth: 12, padding: 6, font: { size: 10 } } 
+          }
+        },
+        cutout: '60%'
+      }
+    });
+  }
+
+  function drawChartTrabajosEstado(data) {
+    const ctx = document.getElementById('chart-trabajos-estado');
+    if (!ctx || !window.Chart) return;
+
+    charts.trabajosEstado = new Chart(ctx, {
+      type: 'doughnut',
+      data: {
+        labels: ['Pendientes', 'En Proceso', 'Finalizados', 'Entregados c/Saldo'],
+        datasets: [{
+          data: [
+            data.pendientes || 0,
+            data.en_proceso || 0,
+            data.finalizados || 0,
+            data.entregados_pendientes || 0
+          ],
+          backgroundColor: ['#ffc107', '#0dcaf0', '#198754', '#fd7e14']
         }]
       },
       options: {
@@ -159,19 +191,21 @@
       safeText('stat-servicios-usd', `$ ${money(s.facturacion_usd)}`);
       safeText('stat-servicios-ars', `$ ${money(s.facturacion_ars_aprox)}`);
 
-      // ============ TRABAJOS PENDIENTES ============
-      const trabajos = await fetchJSON(API.trabajosPendientes).catch(() => []);
-      const totalPendientes = trabajos?.length || 0;
-      const montoPendientes = trabajos?.reduce((sum, t) => sum + Number(t.monto || 0), 0) || 0;
-
-      safeText('stat-trabajos-pendientes', totalPendientes);
-      safeText('stat-trabajos-monto', `ARS ${money(montoPendientes)}`);
+      // ============ TRABAJOS ============
+      const t = data.trabajos || {};
+      
+      safeText('stat-trabajos-total', t.total ?? '0');
+      safeText('stat-trabajos-pendientes', t.pendientes ?? '0');
+      safeText('stat-trabajos-proceso', t.en_proceso ?? '0');
+      safeText('stat-trabajos-saldo', `${t.moneda || 'ARS'} ${money(t.saldo_total)}`);
+      safeText('stat-trabajos-monto', `${t.moneda || 'ARS'} ${money(t.monto_total)}`);
 
       // ============ GRÁFICOS ============
       destroyCharts();
       
       drawChartCobrosEstado(c);
       drawChartServiciosEstado(s);
+      drawChartTrabajosEstado(t);
       
       if (data.evolucion && data.evolucion.length > 0) {
         drawChartCobrosEvolucion(data.evolucion);

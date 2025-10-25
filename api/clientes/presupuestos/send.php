@@ -177,7 +177,7 @@ try {
     if (!file_exists($pdfPath)) {
       throw new Exception('No se pudo generar el PDF');
     }
-$mail->SMTPDebug = 4;
+//$mail->SMTPDebug = 4;
 //echo json_encode(['ok' => false, 'error' => 'server_error', 'detail' => $formConfig]);exit;
 
     

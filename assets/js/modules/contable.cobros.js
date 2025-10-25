@@ -8,7 +8,9 @@
     trabajosPendientes: '/api/contable/cobros/trabajos-pendientes.php',
     clientesSelect: '/api/clientes/select.php',
     trabajosSelect: '/api/trabajos/select.php',
-    serviciosSelect: '/api/parameters/servicios/select.php'
+    serviciosSelect: '/api/parameters/servicios/select.php',
+    proforma: '/api/contable/cobros/proforma.php',
+    emailProforma: '/api/contable/cobros/email_proforma.php'
   };
 
   let itemsWrap = null;
@@ -70,12 +72,20 @@
       <td>${formatDate(c.fecha_emision)}</td>
       <td>${estadoBadge[c.estado] || c.estado}</td>
       <td class="text-end">
-        <button class="btn btn-sm btn-outline-primary me-1 btn-edit" title="Editar">
-          <i class="bi bi-pencil"></i>
-        </button>
-        <button class="btn btn-sm btn-outline-danger btn-del" title="Eliminar">
-          <i class="bi bi-trash"></i>
-        </button>
+        <ul class="navbar-nav">
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="bi bi-gear-wide"></i>
+                </a>
+                <ul class="dropdown-menu border-0 text-end bg-transparent">
+                    <li>
+                        <button class="btn btn-sm btn-primary me-1 btn-edit" title="Editar"><i class="bi bi-pencil"></i></button>
+                        <button class="btn btn-sm btn-danger mt-1 btn-del" title="Eliminar"><i class="bi bi-trash"></i></button>
+                        <button class="btn btn-sm btn-info mt-1 btn-ver-detalle"><i class="bi bi-eye me-1"></i></button>
+                    </li>
+                <ul>
+            </li>
+        <ul>
       </td>
     </tr>`;
   }
@@ -508,6 +518,239 @@
       }
     }
   }
+  // Ver detalle del cobro
+  async function verDetalle(id) {
+    try {
+      const cobro = await fetchJSON(API.get(id));
+      currentCobro = cobro;
+
+      const content = document.querySelector('#cobro-detalle-content');
+      if (!content) return;
+
+      const isProforma = cobro.observaciones && cobro.observaciones.includes('[PROFORMA');
+
+      content.innerHTML = `
+        <div class="row g-3">
+          ${isProforma ? `
+          <div class="col-12">
+            <div class="alert alert-info mb-0">
+              <i class="bi bi-info-circle me-2"></i>
+              <strong>Proforma:</strong> Este cobro está pendiente de facturación oficial.
+            </div>
+          </div>
+          ` : ''}
+          
+          <div class="col-md-6">
+            <h6 class="text-muted mb-2">Información General</h6>
+            <table class="table table-sm">
+              <tr>
+                <td class="text-muted">Código:</td>
+                <td class="fw-semibold">${cobro.codigo}</td>
+              </tr>
+              ${cobro.numero_factura ? `
+              <tr>
+                <td class="text-muted">Nro. Factura:</td>
+                <td class="fw-semibold">${cobro.numero_factura}</td>
+              </tr>
+              ` : ''}
+              <tr>
+                <td class="text-muted">Tipo:</td>
+                <td><span class="badge bg-secondary">${cobro.tipo}</span></td>
+              </tr>
+              <tr>
+                <td class="text-muted">Estado:</td>
+                <td>${estadoBadge[cobro.estado] || cobro.estado}</td>
+              </tr>
+            </table>
+          </div>
+
+          <div class="col-md-6">
+            <h6 class="text-muted mb-2">Cliente</h6>
+            <table class="table table-sm">
+              <tr>
+                <td class="text-muted">Nombre:</td>
+                <td class="fw-semibold">${cobro.cliente_nombre}</td>
+              </tr>
+              ${cobro.cliente_doc ? `
+              <tr>
+                <td class="text-muted">Documento:</td>
+                <td>${cobro.cliente_doc}</td>
+              </tr>
+              ` : ''}
+              ${cobro.cliente_email ? `
+              <tr>
+                <td class="text-muted">Email:</td>
+                <td>${cobro.cliente_email}</td>
+              </tr>
+              ` : ''}
+            </table>
+          </div>
+
+          <div class="col-12">
+            <h6 class="text-muted mb-2">Concepto</h6>
+            <p class="mb-0">${cobro.concepto}</p>
+          </div>
+
+          <div class="col-12">
+            <h6 class="text-muted mb-2">Montos</h6>
+            <table class="table table-sm">
+              <tr>
+                <td class="text-muted">Subtotal:</td>
+                <td class="text-end fw-semibold">$${money(cobro.subtotal)}</td>
+              </tr>
+              ${cobro.descuento > 0 ? `
+              <tr>
+                <td class="text-muted">Descuento:</td>
+                <td class="text-end text-danger">-$${money(cobro.descuento)}</td>
+              </tr>
+              ` : ''}
+              ${cobro.impuestos > 0 ? `
+              <tr>
+                <td class="text-muted">Impuestos:</td>
+                <td class="text-end">$${money(cobro.impuestos)}</td>
+              </tr>
+              ` : ''}
+              <tr class="fw-bold">
+                <td>Total:</td>
+                <td class="text-end">$${money(cobro.total)} ${cobro.moneda}</td>
+              </tr>
+              <tr>
+                <td class="text-muted">Pagado:</td>
+                <td class="text-end text-success">$${money(cobro.monto_pagado)}</td>
+              </tr>
+              <tr class="fw-bold">
+                <td>Saldo:</td>
+                <td class="text-end ${cobro.saldo > 0 ? 'text-danger' : 'text-success'}">
+                  $${money(cobro.saldo)}
+                </td>
+              </tr>
+            </table>
+          </div>
+
+          <div class="col-12">
+            <h6 class="text-muted mb-2">Fechas</h6>
+            <table class="table table-sm">
+              <tr>
+                <td class="text-muted">Emisión:</td>
+                <td>${formatDate(cobro.fecha_emision)}</td>
+              </tr>
+              ${cobro.fecha_vencimiento ? `
+              <tr>
+                <td class="text-muted">Vencimiento:</td>
+                <td>${formatDate(cobro.fecha_vencimiento)}</td>
+              </tr>
+              ` : ''}
+            </table>
+          </div>
+
+          ${cobro.observaciones ? `
+          <div class="col-12">
+            <h6 class="text-muted mb-2">Observaciones</h6>
+            <div class="border rounded p-2">
+              <small>${cobro.observaciones.replace(/\n/g, '<br>')}</small>
+            </div>
+          </div>
+          ` : ''}
+        </div>
+      `;
+
+      // Mostrar modal
+      if (window.bootstrap?.Modal) {
+        const modal = new bootstrap.Modal('#modal-cobro-detalle');
+        modal.show();
+      }
+    } catch (e) {
+      console.error('Error cargando detalle', e);
+      alert('Error cargando el detalle del cobro');
+    }
+  }
+
+  // Generar y descargar proforma en PDF
+  async function downloadProforma() {
+    if (!currentCobro) {
+      alert('No hay un cobro seleccionado');
+      return;
+    }
+
+    try {
+      const url = `${API.proforma}?id=${currentCobro.id}&action=download`;
+      
+      // Crear link temporal para descargar
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `proforma_${currentCobro.codigo}.pdf`;
+      link.target = '_blank';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+
+      alert('Descargando proforma...');
+    } catch (e) {
+      console.error('Error descargando proforma', e);
+      alert('Error generando la proforma. Intente nuevamente.');
+    }
+  }
+
+  // Enviar proforma por email
+  async function emailProforma() {
+    if (!currentCobro) {
+      alert('No hay un cobro seleccionado');
+      return;
+    }
+
+    if (!currentCobro.cliente_email) {
+      alert('El cliente no tiene email registrado');
+      return;
+    }
+
+    if (!confirm(`¿Enviar proforma a ${currentCobro.cliente_email}?`)) {
+      return;
+    }
+
+    try {
+      const result = await fetchJSON(API.emailProforma, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id: currentCobro.id })
+      });
+
+      if (result.ok) {
+        alert('Proforma enviada exitosamente');
+      } else {
+        alert('Error enviando la proforma: ' + (result.error || 'Error desconocido'));
+      }
+    } catch (e) {
+      console.error('Error enviando proforma', e);
+      alert('Error enviando la proforma. Intente nuevamente.');
+    }
+  }
+
+  // Enviar proforma por WhatsApp
+  function whatsappProforma() {
+    if (!currentCobro) {
+      alert('No hay un cobro seleccionado');
+      return;
+    }
+
+    // Generar mensaje
+    const mensaje = encodeURIComponent(
+      `Hola! Le enviamos la proforma ${currentCobro.codigo}\n` +
+      `Concepto: ${currentCobro.concepto}\n` +
+      `Total: $${money(currentCobro.total)} ${currentCobro.moneda}\n\n` +
+      `Puede descargar el PDF desde: ${window.location.origin}/api/contable/cobros/proforma.php?id=${currentCobro.id}&action=download`
+    );
+
+    // Abrir WhatsApp (si hay teléfono registrado)
+    let phone = currentCobro.cliente_telefono || '';
+    phone = phone.replace(/[^0-9]/g, ''); // Limpiar teléfono
+
+    const url = phone 
+      ? `https://wa.me/${phone}?text=${mensaje}`
+      : `https://wa.me/?text=${mensaje}`;
+
+    window.open(url, '_blank');
+  }
+
 
   // Delegación global de eventos
   document.addEventListener('click', (ev) => {
@@ -525,11 +768,6 @@
       return;
     }
 
-    if (ev.target.closest('#btn-importar-trabajos')) {
-      ev.preventDefault();
-      openImportarTrabajos();
-      return;
-    }
 
     if (ev.target.closest('#btn-crear-cobro-trabajos')) {
       ev.preventDefault();
@@ -564,6 +802,45 @@
       itemsWrap = document.getElementById('items-list');
       itemsWrap?.insertAdjacentHTML('beforeend', itemRow());
     }
+    // Botón refrescar
+    if (ev.target.closest('#btn-refresh-cobros')) {
+      ev.preventDefault();
+      loadList();
+      return;
+    }
+
+    // Botón ver detalle
+    const btnDetalle = ev.target.closest('.btn-ver-detalle');
+    if (btnDetalle) {
+      ev.preventDefault();
+      const tr = btnDetalle.closest('tr');
+      if (tr) {
+        const id = Number(tr.dataset.id || 0);
+        if (id) verDetalle(id);
+      }
+      return;
+    }
+
+    // Botones de proforma
+    if (ev.target.closest('#btn-proforma-download')) {
+      ev.preventDefault();
+      downloadProforma();
+      return;
+    }
+
+    if (ev.target.closest('#btn-proforma-email')) {
+      ev.preventDefault();
+      emailProforma();
+      return;
+    }
+
+    if (ev.target.closest('#btn-proforma-whatsapp')) {
+      ev.preventDefault();
+      whatsappProforma();
+      return;
+    }
+
+
   });
 
   // Recalcular total cuando cambien importes

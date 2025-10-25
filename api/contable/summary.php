@@ -95,7 +95,43 @@ try {
   ];
 
   // =====================================================
-  // EVOLUCIÓN MENSUAL (últimos 6 meses)
+  // TRABAJOS PENDIENTES DE COBRO
+  // =====================================================
+  
+  $q_trabajos = $db->query("
+    SELECT 
+      COUNT(*) AS total,
+      SUM(CASE WHEN estado = 'pendiente' THEN 1 ELSE 0 END) AS pendientes,
+      SUM(CASE WHEN estado = 'en_proceso' THEN 1 ELSE 0 END) AS en_proceso,
+      SUM(CASE WHEN estado = 'homologacion' THEN 1 ELSE 0 END) AS homologacion,
+      SUM(CASE WHEN estado = 'finalizado' THEN 1 ELSE 0 END) AS finalizados,
+      SUM(CASE WHEN estado = 'entregado' AND saldo > 0 THEN 1 ELSE 0 END) AS entregados_pendientes,
+      SUM(saldo) AS saldo_total,
+      SUM(total) AS monto_total
+    FROM prm_trabajos
+    WHERE saldo > 0 
+      AND estado NOT IN ('cancelado')
+  ");
+  
+  $r_trabajos = $q_trabajos->fetch_assoc() ?: [
+    'total' => 0, 'pendientes' => 0, 'en_proceso' => 0, 
+    'finalizados' => 0, 'entregados_pendientes' => 0,
+    'saldo_total' => 0, 'monto_total' => 0
+  ];
+
+  $trabajos = [
+    'total'                  => (int)($r_trabajos['total'] ?? 0),
+    'pendientes'             => (int)($r_trabajos['pendientes'] ?? 0),
+    'en_proceso'             => (int)($r_trabajos['en_proceso'] ?? 0) + (int)($r_trabajos['homologacion'] ?? 0),
+    'finalizados'            => (int)($r_trabajos['finalizados'] ?? 0),
+    'entregados_pendientes'  => (int)($r_trabajos['entregados_pendientes'] ?? 0),
+    'saldo_total'            => (float)($r_trabajos['saldo_total'] ?? 0),
+    'monto_total'            => (float)($r_trabajos['monto_total'] ?? 0),
+    'moneda'                 => 'ARS'
+  ];
+
+  // =====================================================
+  // EVOLUCIÓN MENSUAL (Últimos 6 meses)
   // =====================================================
   
   $q_evolucion = $db->query("
@@ -124,6 +160,7 @@ try {
   $response = [
     'cobros'     => $cobros,
     'servicios'  => $servicios,
+    'trabajos'   => $trabajos,
     'evolucion'  => $evolucion,
     'timestamp'  => date('Y-m-d H:i:s')
   ];

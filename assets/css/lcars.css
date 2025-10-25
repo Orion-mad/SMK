@@ -1,5 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400..900&display=swap');
-.orbitron-<uniquifier> {
+.orbitron-<uniquifier > {
   font-family: "Orbitron", sans-serif;
   font-optical-sizing: auto;
   font-weight: <weight>;
@@ -24,12 +24,13 @@
   border: 1px solid #087990;
   padding: 0.8rem;
   border-radius: 8px;
-    clip-path: polygon(0 0, calc(100% - 30px) 0, 100% 30px, 100% 100%, 0 100%);
-    width:97%;
-    margin-bottom:5px;
+  clip-path: polygon(0 0, calc(100% - 30px) 0, 100% 30px, 100% 100%, 0 100%);
+  width: 97%;
+  margin-bottom: 5px;
 }
-h1.h4{
-        font-family: 'Orbitron', 'Segoe UI', sans-serif;
+.ff-orbit,
+h1.h4 {
+  font-family: 'Orbitron', 'Segoe UI', sans-serif;
 }
 .lcars-bg {
   background: radial-gradient(1200px 600px at -200px -100px, #1a2029 0%, var(--lcars-bg) 50%, #0a0c0f 100%) fixed;
@@ -39,15 +40,15 @@ h1.h4{
   backdrop-filter: blur(6px);
   background: rgba(20, 24, 30, .75);
   position: fixed;
-    z-index: 100;
-    font-family: 'Orbitron', 'Segoe UI', sans-serif;
+  z-index: 100;
+  font-family: 'Orbitron', 'Segoe UI', sans-serif;
 }
 .lcars-brand .lcars-pill {
   width: auto;
   height: 32px;
   border-radius: 10px;
   display: inline-block;
-  padding:1px 3px
+  padding: 1px 3px
 }
 .lcars-pill.lcars-color-a {
   background: var(--lcars-a);
@@ -60,15 +61,15 @@ h1.h4{
   background: linear-gradient(180deg, #151a21 0%, #12161c 100%);
   border-right: 2px solid var(--lcars-border-f);
   color: var(--lcars-text);
-  backdrop-filter: blur(10px);           
-  -webkit-backdrop-filter: blur(10px);    
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
 }
 .lcars-link {
   border-left: 10px solid transparent;
   padding: .5rem .75rem;
   border-radius: .5rem;
   color: var(--lcars-text);
-    font-family: 'Orbitron', 'Segoe UI', sans-serif;
+  font-family: 'Orbitron', 'Segoe UI', sans-serif;
 }
 .lcars-link:hover {
   background: #1a2028;
@@ -99,7 +100,9 @@ h1.h4{
   color: #1c1015;
 }
 .lcars-main {
-  max-height: calc(100dvh - 60px);overflow-y: auto; overflow-x: hidden;
+  max-height: calc(100dvh - 60px);
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 .lcars-section-head {
   display: flex;
@@ -183,14 +186,14 @@ h1.h4{
   text-transform: uppercase;
   letter-spacing: .04em;
 }
-.lcars-title{
-    width: 98%;
-    margin: auto;
-    border: 1px solid var(--lcars-border-f);
-    padding: 0.8rem;
-    clip-path: polygon(0 0, calc(100% - 60px) 0, 100% 30px, 100% 100%, 0 100%);
-    background-color: var(--lcars-border);
-    /*
+.lcars-title {
+  width: 98%;
+  margin: auto;
+  border: 1px solid var(--lcars-border-f);
+  padding: 0.8rem;
+  clip-path: polygon(0 0, calc(100% - 60px) 0, 100% 30px, 100% 100%, 0 100%);
+  background-color: var(--lcars-border);
+  /*
   clip-path: polygon(
     0 0, calc(100% - 30px) 0,
     100% 30px, 100% calc(100% - 30px),
@@ -199,13 +202,12 @@ h1.h4{
   );    
     */
 }
-.card .card-footer{
-    border-top-color: var(--lcars-a);
+.card .card-footer {
+  border-top-color: var(--lcars-a);
 }
 small, .small {
   color: var(--lcars-muted) !important;
 }
-
 /* Helpers */
 .lcars-chip {
   padding: .25rem .5rem;

@@ -60,7 +60,7 @@
           </div>
         </div>
 
-        <!-- Card: Servicios (NUEVA) -->
+        <!-- Card: Servicios -->
         <div class="col-12 col-lg-6">
           <div class="card border-0 shadow-sm rounded-4">
             <div class="card-header bg-dark text-white d-flex align-items-center justify-content-between">
@@ -115,48 +115,58 @@
         <div class="col-12 col-lg-6">
           <div class="card border-0 shadow-sm rounded-4">
             <div class="card-header bg-dark text-white d-flex align-items-center justify-content-between">
-              <span class="text-uppercase"><i class="bi bi-exclamation-triangle me-2"></i>Trabajos sin Facturar</span>
+              <span class="text-uppercase"><i class="bi bi-clipboard-check me-2"></i>Trabajos Pendientes de Cobro</span>
+              <a href="#/contable/trabajos" class="btn btn-sm btn-primary">
+                Ver Todos <i class="bi bi-arrow-right-short"></i>
+              </a>
             </div>
             <div class="card-body">
               <div class="row g-3 align-items-stretch">
                 <div class="col-12 col-md-7">
                   <div class="row text-center">
-                    <div class="col-6 mb-3">
-                      <div class="fw-semibold">Pagos Pendientes</div>
+                    <div class="col-6 col-md-4 mb-3">
+                      <div class="fw-semibold">Total</div>
+                      <div class="display-6" id="stat-trabajos-total">—</div>
+                    </div>
+                    <div class="col-6 col-md-4 mb-3">
+                      <div class="fw-semibold">Pendientes</div>
                       <div class="display-6 text-warning" id="stat-trabajos-pendientes">—</div>
                     </div>
-                    <div class="col-6 mb-3">
+                    <div class="col-6 col-md-4 mb-3">
+                      <div class="fw-semibold">En Proceso</div>
+                      <div class="display-6 text-info" id="stat-trabajos-proceso">—</div>
+                    </div>
+                    <div class="col-6 col-md-6 mb-3">
                       <div class="fw-semibold">Monto Total</div>
                       <div class="h5 m-0" id="stat-trabajos-monto">—</div>
                     </div>
-                  </div>
-                  <div class="alert alert-warning mb-0">
-                    <i class="bi bi-info-circle me-2"></i>
-                    Hay pagos de trabajos que aún no fueron incluidos en cobros/facturas.
+                    <div class="col-6 col-md-6 mb-3">
+                      <div class="fw-semibold">Saldo Pendiente</div>
+                      <div class="h5 m-0 text-danger" id="stat-trabajos-saldo">—</div>
+                    </div>
                   </div>
                 </div>
-                <div class="col-12 col-md-5 d-flex align-items-center justify-content-center">
-                  <div class="d-flex flex-column gap-2">
-                    <a href="#/contable/preview-trabajos" class="btn btn-warning btn-lg">
-                      <i class="bi bi-eye me-2"></i>
-                      Ver y Migrar Pagos
-                    </a>
-                    <a href="#/contable/cobros" class="btn btn-outline-warning">
-                      <i class="bi bi-arrow-down-circle me-2"></i>
-                      Importar Seleccionados
-                    </a>
+                <div class="col-12 col-md-5">
+                  <div class="border rounded-4 p-2 h-100 d-flex flex-column">
+                    <div class="small text-muted">Estado de Trabajos</div>
+                    <canvas id="chart-trabajos-estado" height="160"></canvas>
                   </div>
                 </div>
               </div>
             </div>
+            <div class="card-footer d-flex justify-content-end gap-2">
+              <a href="#/contable/trabajos" class="btn btn-outline-primary">
+                Gestionar Trabajos
+              </a>
+            </div>
           </div>
         </div>
 
-        <!-- Gráfico: Evolución de cobros -->
+        <!-- Card: Evolución de Cobros -->
         <div class="col-12 col-lg-6">
           <div class="card border-0 shadow-sm rounded-4 h-100">
             <div class="card-header bg-dark text-white">
-              <span class="text-uppercase"><i class="bi bi-graph-up me-2"></i>Evolución Mensual</span>
+              <span class="text-uppercase"><i class="bi bi-graph-up-arrow me-2"></i>Evolución de Cobros</span>
             </div>
             <div class="card-body">
               <div class="border rounded-4 p-2">
@@ -186,18 +196,6 @@
             </div>
             <div class="card-body">
               <p class="text-muted m-0">Próximamente: gestión de cuentas bancarias, movimientos y conciliaciones.</p>
-            </div>
-          </div>
-        </div>
-
-        <!-- Card: Reportes (próximamente) -->
-        <div class="col-12 col-lg-6">
-          <div class="card border-0 shadow-sm rounded-4">
-            <div class="card-header bg-dark text-white">
-              <span class="text-uppercase"><i class="bi bi-file-earmark-bar-graph me-2"></i>Reportes Contables</span>
-            </div>
-            <div class="card-body">
-              <p class="text-muted m-0">Próximamente: balance, estado de resultados, flujo de caja, reportes fiscales.</p>
             </div>
           </div>
         </div>
