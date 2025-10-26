@@ -1,0 +1,282 @@
+<!-- /views/parametros/mercadopago.html -->
+<section id="parametros-mercadopago-main" class="container-fluid py-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <h2 class="mb-0">
+        <i class="bi bi-credit-card-2-front me-2"></i>Configuración Mercado Pago
+      </h2>
+      <p class="text-muted mb-0">Configure la integración con Mercado Pago para pagos online</p>
+    </div>
+    <a href="#/parametros" class="btn btn-outline-secondary">
+      <i class="bi bi-arrow-left me-1"></i>Volver
+    </a>
+  </div>
+
+  <!-- Alertas de estado -->
+  <div id="mp-alert-container"></div>
+
+  <!-- Card: Credenciales de Producción -->
+  <div class="card mb-4 rounded-4 border-0 shadow-sm">
+    <div class="card-header bg-success text-white">
+      <i class="bi bi-check-circle me-2"></i>Credenciales de Producción
+    </div>
+    <div class="card-body">
+      <form id="form-mp-produccion" class="needs-validation" novalidate>
+        <div class="row g-3">
+          <div class="col-12">
+            <div class="alert alert-warning">
+              <i class="bi bi-exclamation-triangle me-2"></i>
+              <strong>Importante:</strong> Estas credenciales son para el ambiente de producción (pagos reales).
+              Obténgalas desde su <a href="https://www.mercadopago.com.ar/developers/panel" target="_blank">Panel de Desarrolladores de Mercado Pago</a>.
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <label class="form-label">Public Key (Producción) *</label>
+            <input 
+              type="text" 
+              class="form-control font-monospace" 
+              id="mp-prod-public-key"
+              placeholder="APP_USR-xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+              required
+            >
+            <small class="text-muted">Clave pública para frontend</small>
+          </div>
+
+          <div class="col-md-6">
+            <label class="form-label">Access Token (Producción) *</label>
+            <input 
+              type="password" 
+              class="form-control font-monospace" 
+              id="mp-prod-access-token"
+              placeholder="APP_USR-xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+              required
+            >
+            <small class="text-muted">Token de acceso para backend</small>
+            <div class="form-check mt-2">
+              <input class="form-check-input" type="checkbox" id="toggle-prod-token">
+              <label class="form-check-label" for="toggle-prod-token">
+                Mostrar token
+              </label>
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <label class="form-label">Webhook URL</label>
+            <input 
+              type="url" 
+              class="form-control" 
+              id="mp-prod-webhook"
+              placeholder="https://tudominio.com/api/webhooks/mercadopago"
+            >
+            <small class="text-muted">URL para notificaciones de Mercado Pago</small>
+          </div>
+
+          <div class="col-md-6">
+            <label class="form-label">URL de Retorno (Success)</label>
+            <input 
+              type="url" 
+              class="form-control" 
+              id="mp-prod-success-url"
+              placeholder="https://tudominio.com/pago-exitoso"
+            >
+          </div>
+
+          <div class="col-md-6">
+            <label class="form-label">URL de Retorno (Pending)</label>
+            <input 
+              type="url" 
+              class="form-control" 
+              id="mp-prod-pending-url"
+              placeholder="https://tudominio.com/pago-pendiente"
+            >
+          </div>
+
+          <div class="col-md-6">
+            <label class="form-label">URL de Retorno (Failure)</label>
+            <input 
+              type="url" 
+              class="form-control" 
+              id="mp-prod-failure-url"
+              placeholder="https://tudominio.com/pago-fallido"
+            >
+          </div>
+
+          <div class="col-12">
+            <div class="form-check form-switch">
+              <input class="form-check-input" type="checkbox" id="mp-prod-activo">
+              <label class="form-check-label fw-bold" for="mp-prod-activo">
+                Habilitar ambiente de Producción
+              </label>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Card: Credenciales de Test -->
+  <div class="card mb-4 rounded-4 border-0 shadow-sm">
+    <div class="card-header bg-info text-white">
+      <i class="bi bi-bug me-2"></i>Credenciales de Test (Sandbox)
+    </div>
+    <div class="card-body">
+      <form id="form-mp-test" class="needs-validation" novalidate>
+        <div class="row g-3">
+          <div class="col-12">
+            <div class="alert alert-info">
+              <i class="bi bi-info-circle me-2"></i>
+              Estas credenciales son para pruebas. Los pagos realizados en este ambiente NO son reales.
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <label class="form-label">Public Key (Test) *</label>
+            <input 
+              type="text" 
+              class="form-control font-monospace" 
+              id="mp-test-public-key"
+              placeholder="TEST-xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+              required
+            >
+          </div>
+
+          <div class="col-md-6">
+            <label class="form-label">Access Token (Test) *</label>
+            <input 
+              type="password" 
+              class="form-control font-monospace" 
+              id="mp-test-access-token"
+              placeholder="TEST-xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+              required
+            >
+            <div class="form-check mt-2">
+              <input class="form-check-input" type="checkbox" id="toggle-test-token">
+              <label class="form-check-label" for="toggle-test-token">
+                Mostrar token
+              </label>
+            </div>
+          </div>
+
+          <div class="col-12">
+            <div class="form-check form-switch">
+              <input class="form-check-input" type="checkbox" id="mp-test-activo">
+              <label class="form-check-label fw-bold" for="mp-test-activo">
+                Habilitar ambiente de Test
+              </label>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Card: Configuración Adicional -->
+  <div class="card mb-4 rounded-4 border-0 shadow-sm">
+    <div class="card-header bg-dark text-white">
+      <i class="bi bi-gear me-2"></i>Configuración Adicional
+    </div>
+    <div class="card-body">
+      <div class="row g-3">
+        <div class="col-md-4">
+          <label class="form-label">Modo Activo</label>
+          <select class="form-select" id="mp-modo">
+            <option value="test">Test (Sandbox)</option>
+            <option value="produccion">Producción</option>
+          </select>
+          <small class="text-muted">Modo actual del sistema</small>
+        </div>
+
+        <div class="col-md-4">
+          <label class="form-label">Tiempo de Expiración (minutos)</label>
+          <input 
+            type="number" 
+            class="form-control" 
+            id="mp-expiracion"
+            value="30"
+            min="1"
+            max="1440"
+          >
+          <small class="text-muted">Tiempo hasta que expira una preferencia de pago</small>
+        </div>
+
+        <div class="col-md-4">
+          <label class="form-label">Intentos de Pago</label>
+          <input 
+            type="number" 
+            class="form-control" 
+            id="mp-intentos"
+            value="2"
+            min="1"
+            max="10"
+          >
+          <small class="text-muted">Cantidad máxima de intentos permitidos</small>
+        </div>
+
+        <div class="col-md-6">
+          <label class="form-label">Statement Descriptor</label>
+          <input 
+            type="text" 
+            class="form-control" 
+            id="mp-statement"
+            placeholder="MI EMPRESA"
+            maxlength="22"
+          >
+          <small class="text-muted">Nombre que aparece en el resumen de tarjeta (máx. 22 caracteres)</small>
+        </div>
+
+        <div class="col-md-6">
+          <label class="form-label">Email de Notificaciones</label>
+          <input 
+            type="email" 
+            class="form-control" 
+            id="mp-email-notif"
+            placeholder="pagos@empresa.com"
+          >
+          <small class="text-muted">Email para recibir notificaciones de pagos</small>
+        </div>
+
+        <div class="col-12">
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="mp-auto-return">
+            <label class="form-check-label" for="mp-auto-return">
+              Auto Return (Redirección automática después del pago)
+            </label>
+          </div>
+        </div>
+
+        <div class="col-12">
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="mp-binary-mode">
+            <label class="form-check-label" for="mp-binary-mode">
+              Modo Binario (Solo estados approved/rejected, sin pending)
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Botones de acción -->
+  <div class="d-flex justify-content-end gap-2 mb-4">
+    <button type="button" class="btn btn-outline-primary" id="btn-test-connection">
+      <i class="bi bi-wifi me-1"></i>Probar Conexión
+    </button>
+    <button type="button" class="btn btn-primary" id="btn-guardar-mp">
+      <i class="bi bi-save me-1"></i>Guardar Configuración
+    </button>
+  </div>
+
+  <!-- Card: Estado de la Conexión -->
+  <div class="card rounded-4 border-0 shadow-sm">
+    <div class="card-header bg-secondary text-white">
+      <i class="bi bi-activity me-2"></i>Estado de la Conexión
+    </div>
+    <div class="card-body">
+      <div id="mp-connection-status" class="text-center py-3">
+        <span class="text-muted">Presione "Probar Conexión" para verificar las credenciales</span>
+      </div>
+    </div>
+  </div>
+
+</section>

@@ -239,7 +239,7 @@
   background: linear-gradient(145deg, rgba(255,255,255,0.03), rgba(0,0,0,0.4)) var(--lc-panel);
   border: 1px solid var(--lc-border);
   color: var(--lc-text-light);
-  border-radius: 12px;
+  border-radius: 12px!important;
   box-shadow: 0 0 40px rgba(0, 0, 0, 0.5), inset 0 0 20px rgba(255,255,255,0.02);
   overflow: hidden;
   position: relative;
@@ -255,7 +255,7 @@
   font-weight: 600;
   padding: 0.75rem 1rem;
   clip-path: polygon(10px 0, 100% 0, 100% 100%, 0 100%, 0 10px);
-  border-bottom: 1px solid rgba(255,255,255,0.1);
+  border: none!important;
 }
 
 /* Variante de color */
@@ -267,6 +267,7 @@
 .card.lcars-card .card-body {
   padding: 1rem 1.2rem;
   background: rgba(255,255,255,0.02);
+  border: none!important;
 }
 
 /* Footer con bordes inferiores ochavados */
@@ -289,4 +290,85 @@
   transform: translateY(-3px);
   box-shadow: 0 0 50px rgba(255,255,255,0.08);
   transition: 0.25s ease;
+}
+
+
+/* ============================
+   LCARS TABLE HEADERS
+   ============================ */
+
+
+/* Base de la tabla */
+.lcars-table {
+  color: var(--lcars-text-light);    
+  background: rgba(255,255,255,0.02);
+  width: 100%;
+  font-size: 0.95rem;
+  margin-top: 15px!important;
+  overflow: hidden;
+  border-collapse: separate;
+  border-spacing: 0;
+  border: none!important;
+  border-radius: 10px;
+  box-shadow: 0 0 25px rgba(0,0,0,0.4);
+}
+
+/* Encabezado LCARS */
+.lcars-table thead {
+  font-family: "Orbitron", sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: #111;
+}
+.lcars-table thead tr {
+  background: var(--lcars-amber)!important;
+  clip-path: polygon(12px 0, 100% 0, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0 100%, 0 12px);
+}
+.lcars-table.lcars-cyan thead tr { background: var(--lcars-cyan); }
+.lcars-table.lcars-violet thead tr { background: var(--lcars-violet); }
+.lcars-table.lcars-pink thead tr { background: var(--lcars-pink); }
+
+.lcars-table thead th {
+  padding: 0.75rem 1rem;
+  border-bottom: 0px solid rgba(0,0,0,0.1);
+  white-space: nowrap;
+  text-align: center;
+}
+
+/* Filas del cuerpo */
+.lcars-table tbody tr {
+  background: rgba(255,255,255,0.02);
+  transition: background 0.2s ease;
+}
+.lcars-table tbody tr:nth-child(even) {
+  background: rgba(255,255,255,0.03);
+}
+.lcars-table tbody tr:hover {
+  background: rgba(255,255,255,0.08);
+}
+
+/* Celdas */
+.lcars-table td {
+  padding: 0.6rem 1rem;
+  border-top: 1px solid var(--lcars-border);
+  text-align: center;
+}
+
+/* Bordes inferiores recortados */
+.lcars-table tfoot tr {
+  background: var(--lcars-amber);
+  clip-path: polygon(0 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 8px 100%, 0 calc(100% - 8px));
+  color: #111;
+}
+
+/* Efecto glass opcional */
+.lcars-glass thead tr {
+  background: rgba(255,255,255,0.12);
+  backdrop-filter: blur(8px);
+  color: var(--lcars-text-light);
+}
+
+/* Hover sobre celdas de header (sutil brillo) */
+.lcars-table thead th:hover {
+  filter: brightness(1.05);
 }

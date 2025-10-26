@@ -6,6 +6,7 @@ header('Content-Type: application/json; charset=utf-8');
 require_once __DIR__ . '/../../../inc/conect.php';
 require_once __DIR__ . '/../../core/crud_helper.php';
 require_once __DIR__ . '/../../core/codigo_helper.php';
+require_once __DIR__ . '/../../core/moneda_helper.php';
 
 try {
   $input = json_decode(file_get_contents('php://input'), true);
@@ -19,13 +20,16 @@ try {
   $db = DB::get();
 
   // Autogenerar código si no viene o está vacío (solo en alta)
-  lcars_autocodigo($db, 'cnt_cobros', $input, 'codigo', 'id');
+  lcars_autocodigo($db, 'cnt_cobros', $input, 'codigo', 'id', 'COB');
 
+  // Determinar acción
+  $accion = $input['accion'] ?? 'guardar';
+  
   // Configuración para crud_helper
   $cfg = [
     'table' => 'cnt_cobros',
     'pk' => 'id',
-    'unique' => ['codigo'], // codigo debe ser único
+    'unique' => ['codigo'],
     'fields' => [
       'id' => [
         'col' => 'id',
@@ -123,6 +127,28 @@ try {
         'type' => 'float',
         'default' => 0.0
       ],
+      'afip_cae' => [
+        'col' => 'afip_cae',
+        'type' => 'str',
+        'nullable' => true,
+        'max' => 20
+      ],
+      'afip_vencimiento_cae' => [
+        'col' => 'afip_vencimiento_cae',
+        'type' => 'str',
+        'nullable' => true
+      ],
+      'afip_tipo_comprobante' => [
+        'col' => 'afip_tipo_comprobante',
+        'type' => 'str',
+        'nullable' => true,
+        'max' => 10
+      ],
+      'afip_punto_venta' => [
+        'col' => 'afip_punto_venta',
+        'type' => 'int',
+        'nullable' => true
+      ],
       'observaciones' => [
         'col' => 'observaciones',
         'type' => 'str',
@@ -141,14 +167,13 @@ try {
     ]
   ];
 
-  // Validaciones adicionales
-  $clienteId = (int)($input['cliente_id'] ?? 0);
-  if ($clienteId > 0) {
+  // Validar cliente
+  if (!empty($input['cliente_id'])) {
+    $clienteId = (int)$input['cliente_id'];
     $stmt = $db->prepare("SELECT id FROM clientes WHERE id = ? LIMIT 1");
     $stmt->bind_param('i', $clienteId);
     $stmt->execute();
     $stmt->store_result();
-    
     if ($stmt->num_rows === 0) {
       $stmt->close();
       http_response_code(400);
@@ -158,18 +183,78 @@ try {
     $stmt->close();
   }
 
-  // Calcular saldo inicial (total - monto_pagado)
-  if (!isset($input['saldo'])) {
-    $input['saldo'] = ($input['total'] ?? 0) - ($input['monto_pagado'] ?? 0);
+  // Validar servicio
+  if (!empty($input['servicio_id'])) {
+    $servicioId = (int)$input['servicio_id'];
+    $stmt = $db->prepare("SELECT id FROM prm_servicios WHERE id = ? LIMIT 1");
+    $stmt->bind_param('i', $servicioId);
+    $stmt->execute();
+    $stmt->store_result();
+    if ($stmt->num_rows === 0) {
+      $stmt->close();
+      http_response_code(400);
+      echo json_encode(['ok' => false, 'error' => 'El servicio seleccionado no existe']);
+      exit;
+    }
+    $stmt->close();
   }
 
-  // Guardar usando crud_helper
-  $result = lcars_save($cfg, $input);
-  
-  echo json_encode($result, JSON_UNESCAPED_UNICODE);
+  // Si la acción es proforma, marcar el estado como proforma
+  if ($accion === 'proforma') {
+    $input['estado'] = 'pendiente'; // Las proformas quedan pendientes hasta que se registre el pago
+  }
+
+  // Guardar el cobro
+  $result = lcars_crud($cfg, $input);
+
+  if (!$result['ok']) {
+    http_response_code(400);
+    echo json_encode($result);
+    exit;
+  }
+
+  $cobroId = $result['id'];
+
+  // Procesar según la acción
+  $response = [
+    'ok' => true,
+    'id' => $cobroId,
+    'codigo' => $input['codigo']
+  ];
+
+  switch ($accion) {
+    case 'facturar_arca':
+      // TODO: Implementar integración con ARCA/AFIP
+      // Por ahora, solo marcamos que se intentó facturar
+      $stmt = $db->prepare("
+        UPDATE cnt_cobros 
+        SET afip_tipo_comprobante = 'PENDIENTE_FACTURACION'
+        WHERE id = ?
+      ");
+      $stmt->bind_param('i', $cobroId);
+      $stmt->execute();
+      $stmt->close();
+      
+      $response['factura_url'] = null;
+      $response['message'] = 'Cobro guardado. La facturación con ARCA se implementará próximamente.';
+      break;
+
+    case 'proforma':
+      // Generar URL de proforma
+      $response['proforma_url'] = "/api/contable/cobros/proforma.php?id={$cobroId}&action=download";
+      $response['message'] = 'Proforma generada correctamente';
+      break;
+
+    default: // 'guardar'
+      $response['message'] = 'Cobro guardado correctamente';
+      break;
+  }
+
+  http_response_code(200);
+  echo json_encode($response, JSON_UNESCAPED_UNICODE);
 
 } catch (Throwable $e) {
-  error_log('[contable/servicios/save_cobro] ' . $e->getMessage());
+  error_log('[servicios/save_cobro] ' . $e->getMessage());
   http_response_code(500);
   echo json_encode(['ok' => false, 'error' => 'server_error', 'detail' => $e->getMessage()]);
 }

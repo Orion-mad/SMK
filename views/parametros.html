@@ -1,213 +1,179 @@
-<section class="container-fluid p-3 d-flex flex-column" id="view-parametros">
-  <header class="mb-3 d-flex align-items-center justify-content-between">
-    <h1 class="h4 text-uppercase m-0"> <span class="badge bg-warning me-2">LCARS</span> Parámetros del Sistema </h1>
-  </header>
-  <div class="row g-3 flex-grow-1">
-    <div class="col-12">
-      <div class="row g-3"> 
-        
-        <!-- Card: Planes de Sistemas -->
-        <div class="col-12 col-lg-6">
-          <div class="card lcars-card border-0 shadow-sm rounded-4">
-            <div class="card-header bg-dark text-white d-flex align-items-center justify-content-between"> <span class="text-uppercase"><i class="bi bi-box-seam me-2"></i>Planes de Sistemas</span> <a href="#/parametros/planes" class="btn btn-sm btn-primary"> Abrir <i class="bi bi-arrow-right-short"></i> </a> </div>
-            <div class="card-body">
-              <div class="row g-3 align-items-stretch">
-                <div class="col-12 col-md-7">
-                  <div class="row text-center">
-                    <div class="col-6 col-md-4 mb-3">
-                      <div class="fw-semibold small">Planes</div>
-                      <div class="display-6" id="stat-planes-total">—</div>
-                    </div>
-                    <div class="col-6 col-md-4 mb-3">
-                      <div class="fw-semibold small">Activos</div>
-                      <div class="display-6" id="stat-planes-activos">—</div>
-                    </div>
-                    <div class="col-6 col-md-4 mb-3">
-                      <div class="fw-semibold small">Features</div>
-                      <div class="display-6" id="stat-planes-features">—</div>
-                    </div>
-                    <div class="col-6 col-md-4 mb-3">
-                      <div class="fw-semibold small">Prom. Mensual</div>
-                      <div class="h5 m-0" id="stat-planes-pm">—</div>
-                    </div>
-                    <div class="col-6 col-md-4 mb-3">
-                      <div class="fw-semibold small">Prom. Anual</div>
-                      <div class="h5 m-0" id="stat-planes-pa">—</div>
-                    </div>
-                    <div class="col-6 col-md-4 mb-3">
-                      <div class="fw-semibold small">Moneda</div>
-                      <div class="h5 m-0" id="stat-planes-moneda">—</div>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-12 col-md-5">
-                  <div class="border rounded-4 p-2 h-100 d-flex flex-column">
-                    <div class="small text-muted mb-2">Activos vs Inactivos</div>
-                    <div style="position: relative; height: 160px;">
-                      <canvas id="chart-planes-estado"></canvas>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="card-footer d-flex justify-content-end gap-2"> <a href="#/parametros/planes" class="btn btn-outline-primary"> Gestionar Planes </a> </div>
-          </div>
-        </div>
-        
-        <!-- Card: Servicios al Cliente -->
-        <div class="col-12 col-lg-6">
-          <div class="card lcars-card border-0 shadow-sm rounded-4">
-            <div class="card-header bg-dark text-white d-flex align-items-center justify-content-between"> <span class="text-uppercase"><i class="bi bi-hdd-network me-2"></i>Servicios al Cliente</span> <a href="#/parametros/servicios" class="btn btn-sm btn-primary"> Abrir <i class="bi bi-arrow-right-short"></i> </a> </div>
-            <div class="card-body">
-              <div class="row g-3 align-items-stretch">
-                <div class="col-12 col-md-7">
-                  <div class="row text-center">
-                    <div class="col-6 col-md-4 mb-3">
-                      <div class="fw-semibold small">Servicios</div>
-                      <div class="display-6" id="stat-servicios-total">—</div>
-                    </div>
-                    <div class="col-6 col-md-4 mb-3">
-                      <div class="fw-semibold small">Activos</div>
-                      <div class="display-6" id="stat-servicios-activos">—</div>
-                    </div>
-                    <div class="col-6 col-md-4 mb-3">
-                      <div class="fw-semibold small">Exclusivos</div>
-                      <div class="display-6" id="stat-servicios-excl">—</div>
-                    </div>
-                    <div class="col-6 col-md-4 mb-3">
-                      <div class="fw-semibold small">Prom. ≈ ARS</div>
-                      <div class="h5 m-0" id="stat-servicios-prom-ars">—</div>
-                    </div>
-                    <div class="col-6 col-md-4 mb-3">
-                      <div class="fw-semibold small">Moneda base</div>
-                      <div class="h5 m-0" id="stat-servicios-moneda">—</div>
-                    </div>
-                    <div class="col-6 col-md-4 mb-3">
-                      <div class="fw-semibold small">Con Planes</div>
-                      <div class="h5 m-0" id="stat-servicios-con-planes">—</div>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-12 col-md-5">
-                  <div class="border rounded-4 p-2 h-100 d-flex flex-column">
-                    <div class="small text-muted mb-2">Estado Servicios</div>
-                    <div style="position: relative; height: 160px;">
-                      <canvas id="chart-servicios-estado"></canvas>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="card-footer d-flex justify-content-end gap-2"> <a href="#/parametros/servicios" class="btn btn-outline-primary"> Gestionar Servicios </a> </div>
-          </div>
-        </div>
-        
-        <!-- Mini gráfico: Precios promedio -->
-        <div class="col-12 col-lg-6">
-          <div class="card lcars-card border-0 shadow-sm rounded-4 h-100">
-            <div class="card-header bg-dark text-white"> <span class="text-uppercase"><i class="bi bi-bar-chart-line me-2"></i>Precios Promedio</span> </div>
-            <div class="card-body">
-              <div class="border rounded-4 p-2">
-                <div style="position: relative; height: 180px;">
-                  <canvas id="chart-planes-precios"></canvas>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        
-<!-- Placeholders para otros ítems -->
-          <div class="col-12 col-lg-6">
-            <div class="card lcars-card border-0 shadow-sm rounded-4">
-              <div class="card-header bg-dark text-white d-flex align-items-center justify-content-between">
-                <span class="text-uppercase">
-                  <i class="bi bi-cash-coin me-2"></i>Conceptos de Caja
-                </span>
-                <a href="#/parametros/conceptos" class="btn btn-sm btn-primary">
-                  Abrir <i class="bi bi-arrow-right-short"></i>
-                </a>
-              </div>
-              <div class="card-body">
-                <div class="row text-center">
-                  <div class="col-4">
-                    <div class="fw-semibold">Total</div>
-                    <div class="display-6" id="stat-conceptos-total">—</div>
-                  </div>
-                  <div class="col-4">
-                    <div class="fw-semibold">Ingresos</div>
-                    <div class="display-6 text-success" id="stat-conceptos-ingresos">—</div>
-                  </div>
-                  <div class="col-4">
-                    <div class="fw-semibold">Egresos</div>
-                    <div class="display-6 text-danger" id="stat-conceptos-egresos">—</div>
-                  </div>
-                </div>
-                <div class="mt-3 border rounded-4 p-2">
-                  <canvas id="chart-conceptos-categorias" height="120"></canvas>
-                </div>
-              </div>
-              <div class="card-footer d-flex justify-content-end gap-2">
-                <a href="#/parametros/conceptos" class="btn btn-outline-primary">
-                  Gestionar Conceptos
-                </a>
-              </div>
-            </div>
-          </div>
-          <!-- Card: Medios de Pago (NUEVO) -->
-          <div class="col-12 col-lg-6">
-            <div class="card lcars-card border-0 shadow-sm rounded-4">
-              <div class="card-header bg-dark text-white d-flex align-items-center justify-content-between">
-                <span class="text-uppercase"><i class="bi bi-wallet2 me-2"></i>Medios de Pago</span>
-                <a href="#/parametros/medios-pago" class="btn btn-sm btn-primary">
-                  Abrir <i class="bi bi-arrow-right-short"></i>
-                </a>
-              </div>
-              <div class="card-body">
-                <p class="m-0">
-                  Gestión de medios de pago disponibles para registros de caja.
-                  Configure los métodos de pago que utilizará en las operaciones diarias.
-                </p>
-                <div class="mt-3">
-                  <small class="text-muted">
-                    <i class="bi bi-info-circle me-1"></i>
-                    Efectivo, Transferencias, Tarjetas, Mercado Pago, etc.
-                  </small>
-                </div>
-              </div>
-              <div class="card-footer d-flex justify-content-end gap-2">
-                <a href="#/parametros/medios-pago" class="btn btn-outline-primary">
-                  Gestionar Medios de Pago
-                </a>
-              </div>
-            </div>
-          </div>
-
-         <!-- Placeholders para otros ítems --> 
-        <div class="col-12 col-lg-6">
-          <div class="card lcars-card border-0 shadow-sm rounded-4">
-            <div class="card-header bg-dark text-white"> <span class="text-uppercase"><i class="bi bi-credit-card-2-front me-2"></i>Mercado Pago</span> </div>
-            <div class="card-body">
-              <p class="text-muted m-0">Próximamente: configuración de API (test/prod), claves, webhook.</p>
-            </div>
-          </div>
-        </div>
-        <div class="col-12 col-lg-6">
-          <div class="card lcars-card border-0 shadow-sm rounded-4">
-            <div class="card-header bg-dark text-white"> <span class="text-uppercase"><i class="bi bi-file-earmark-text me-2"></i>ARCA / AFIP</span> </div>
-            <div class="card-body">
-              <p class="text-muted m-0">Próximamente: CUIT, cert/key, endpoints homo/prod, pto_vta.</p>
-            </div>
-          </div>
-        </div>
-        <div class="col-12 col-lg-6">
-          <div class="card lcars-card border-0 shadow-sm rounded-4">
-            <div class="card-header bg-dark text-white"> <span class="text-uppercase"><i class="bi bi-envelope-gear me-2"></i>Correo SMTP</span> </div>
-            <div class="card-body">
-              <p class="text-muted m-0">Próximamente: host/puerto/secure, remitente, reply-to.</p>
-            </div>
-          </div>
-        </div>
-      <!-- /row --> 
+<!-- /views/parametros.html - Actualizado con Mercado Pago -->
+<section id="parametros-main" class="container-fluid py-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <h2 class="mb-0"><i class="bi bi-gear-fill me-2"></i>Parámetros del Sistema</h2>
+      <p class="text-muted mb-0">Configuración general de la aplicación</p>
     </div>
   </div>
+
+  <!-- Resumen de Cards -->
+  <div class="row g-4">
+    
+    <!-- Card: Planes -->
+    <div class="col-12 col-lg-6">
+      <div class="card lcars-card border-0 shadow-sm rounded-4">
+        <div class="card-header bg-dark text-white d-flex align-items-center justify-content-between">
+          <span class="text-uppercase"><i class="bi bi-box-seam me-2"></i>Planes</span>
+          <a href="#/parametros/planes" class="btn btn-sm btn-primary">
+            Abrir <i class="bi bi-arrow-right-short"></i>
+          </a>
+        </div>
+        <div class="card-body">
+          <div class="row">
+            <div class="col-6">
+              <div class="fw-semibold">Total</div>
+              <div class="display-6" id="stat-planes-total">—</div>
+            </div>
+            <div class="col-6">
+              <div class="fw-semibold">Activos</div>
+              <div class="display-6 text-success" id="stat-planes-activos">—</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card: Servicios -->
+    <div class="col-12 col-lg-6">
+      <div class="card lcars-card border-0 shadow-sm rounded-4">
+        <div class="card-header bg-dark text-white d-flex align-items-center justify-content-between">
+          <span class="text-uppercase"><i class="bi bi-gear me-2"></i>Servicios</span>
+          <a href="#/parametros/servicios" class="btn btn-sm btn-primary">
+            Abrir <i class="bi bi-arrow-right-short"></i>
+          </a>
+        </div>
+        <div class="card-body">
+          <div class="row">
+            <div class="col-6">
+              <div class="fw-semibold">Total</div>
+              <div class="display-6" id="stat-servicios-total">—</div>
+            </div>
+            <div class="col-6">
+              <div class="fw-semibold">Activos</div>
+              <div class="display-6 text-success" id="stat-servicios-activos">—</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card: Conceptos de Caja -->
+    <div class="col-12 col-lg-6">
+      <div class="card lcars-card border-0 shadow-sm rounded-4">
+        <div class="card-header bg-dark text-white d-flex align-items-center justify-content-between">
+          <span class="text-uppercase"><i class="bi bi-tag me-2"></i>Conceptos de Caja</span>
+          <a href="#/parametros/conceptos" class="btn btn-sm btn-primary">
+            Abrir <i class="bi bi-arrow-right-short"></i>
+          </a>
+        </div>
+        <div class="card-body">
+          <div class="row">
+            <div class="col-4">
+              <div class="fw-semibold">Total</div>
+              <div class="display-6" id="stat-conceptos-total">—</div>
+            </div>
+            <div class="col-4">
+              <div class="fw-semibold">Ingresos</div>
+              <div class="display-6 text-success" id="stat-conceptos-ingresos">—</div>
+            </div>
+            <div class="col-4">
+              <div class="fw-semibold">Egresos</div>
+              <div class="display-6 text-danger" id="stat-conceptos-egresos">—</div>
+            </div>
+          </div>
+          <div class="mt-3 border rounded-4 p-2">
+            <canvas id="chart-conceptos-categorias" height="120"></canvas>
+          </div>
+        </div>
+        <div class="card-footer d-flex justify-content-end gap-2">
+          <a href="#/parametros/conceptos" class="btn btn-outline-primary">
+            Gestionar Conceptos
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card: Medios de Pago -->
+    <div class="col-12 col-lg-6">
+      <div class="card lcars-card border-0 shadow-sm rounded-4">
+        <div class="card-header bg-dark text-white d-flex align-items-center justify-content-between">
+          <span class="text-uppercase"><i class="bi bi-wallet2 me-2"></i>Medios de Pago</span>
+          <a href="#/parametros/medios-pago" class="btn btn-sm btn-primary">
+            Abrir <i class="bi bi-arrow-right-short"></i>
+          </a>
+        </div>
+        <div class="card-body">
+          <p class="m-0">
+            Gestión de medios de pago disponibles para registros de caja.
+            Configure los métodos de pago que utilizará en las operaciones diarias.
+          </p>
+          <div class="mt-3">
+            <small class="text-muted">
+              <i class="bi bi-info-circle me-1"></i>
+              Efectivo, Transferencias, Tarjetas, Mercado Pago, etc.
+            </small>
+          </div>
+        </div>
+        <div class="card-footer d-flex justify-content-end gap-2">
+          <a href="#/parametros/medios-pago" class="btn btn-outline-primary">
+            Gestionar Medios de Pago
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card: Mercado Pago -->
+    <div class="col-12 col-lg-6">
+      <div class="card lcars-card border-0 shadow-sm rounded-4">
+        <div class="card-header bg-success text-white d-flex align-items-center justify-content-between">
+          <span class="text-uppercase"><i class="bi bi-credit-card-2-front me-2"></i>Mercado Pago</span>
+          <a href="#/parametros/mercadopago" class="btn btn-sm btn-light">
+            Configurar <i class="bi bi-arrow-right-short"></i>
+          </a>
+        </div>
+        <div class="card-body">
+          <p class="m-0">
+            Configure la integración con Mercado Pago para recibir pagos online.
+            Administre credenciales de producción y test, webhooks, y configuración avanzada.
+          </p>
+          <div class="mt-3">
+            <small class="text-muted">
+              <i class="bi bi-shield-check me-1"></i>
+              Credenciales seguras, Webhooks, Auto-return
+            </small>
+          </div>
+        </div>
+        <div class="card-footer d-flex justify-content-end gap-2">
+          <a href="#/parametros/mercadopago" class="btn btn-success">
+            <i class="bi bi-gear me-1"></i>Configurar Mercado Pago
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Placeholders para otros ítems --> 
+    <div class="col-12 col-lg-6">
+      <div class="card lcars-card border-0 shadow-sm rounded-4">
+        <div class="card-header bg-dark text-white">
+          <span class="text-uppercase"><i class="bi bi-file-earmark-text me-2"></i>ARCA / AFIP</span>
+        </div>
+        <div class="card-body">
+          <p class="text-muted m-0">Próximamente: CUIT, cert/key, endpoints homo/prod, pto_vta.</p>
+        </div>
+      </div>
+    </div>
+    
+    <div class="col-12 col-lg-6">
+      <div class="card lcars-card border-0 shadow-sm rounded-4">
+        <div class="card-header bg-dark text-white">
+          <span class="text-uppercase"><i class="bi bi-envelope-gear me-2"></i>Correo SMTP</span>
+        </div>
+        <div class="card-body">
+          <p class="text-muted m-0">Próximamente: host/puerto/secure, remitente, reply-to.</p>
+        </div>
+      </div>
+    </div>
+    
+  </div><!-- /row -->
 </section>

@@ -1,6 +1,6 @@
 // assets/js/router.js
 (() => {
-const ROUTES = {
+  const ROUTES = {
     '#/dashboard':                      'views/dashboard.html',
     
     '#/clientes':                       'views/clientes.html',
@@ -16,6 +16,7 @@ const ROUTES = {
     '#/parametros/conceptos':           'views/parametros/conceptos.html',
     '#/parametros/conceptos-categorias':'views/parametros/conceptos-categorias.html',
     '#/parametros/medios-pago':         'views/parametros/medios_pago.html',
+    '#/parametros/mercadopago':         'views/parametros/mercadopago.html',
     
     '#/contable':                       'views/contable.html',
     '#/contable/cobros':                'views/contable/cobros.html',
@@ -26,7 +27,7 @@ const ROUTES = {
   function normalizeHash(h) {
     if (!h || !h.startsWith('#/')) return '#/login';
     // quitar trailing slash y query, por si aparecen
-    const [base] = h.replace(/\/+$/,'').split('?');
+    const [base] = h.replace(/\/+$/, '').split('?');
     return base;
   }
 
