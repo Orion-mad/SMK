@@ -23,6 +23,8 @@ try {
       CONCAT(COALESCE(cl.razon_social, ''), ' ', COALESCE(cl.contacto_nombre, '')) AS cliente_nombre,
       cl.nro_doc AS cliente_documento,
       cl.email AS cliente_email,
+      cl.celular AS cliente_celular,
+      cl.telefono AS cliente_telefono,
       t.codigo AS trabajo_codigo,
       t.nombre AS trabajo_nombre,
       s.codigo AS servicio_codigo,

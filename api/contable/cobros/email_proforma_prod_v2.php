@@ -185,7 +185,7 @@ try {
   
 } catch (Throwable $e) {
   error_log('[contable/cobros/email_proforma_prod_v2] ' . $e->getMessage() . ' @ ' . $e->getFile() . ':' . $e->getLine());
-  //http_response_code(500);
+  http_response_code(500);
   echo json_encode([
     'ok' => false,
     'error' => 'Error al enviar el email',

@@ -2,7 +2,7 @@
   "useSmtp": true,
   "host": "mail.sysmika.com",
   "port": 465,
-  "username": "noreply@sysmmika.com",
+  "username": "noreply@sysmika.com",
   "password": "0800miguel60",
   "recipientEmail": "admin@sysmika.com"
 }

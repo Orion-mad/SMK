@@ -7,45 +7,40 @@
     <div class="h5 m-0 lcars-title">Panel de Control</div>
     <small>Estado general del sistema</small> </div>-->
   <div class="container mt-5 py-3">
+    <h4 class="mb-4 lcars-title">Estado del servidor Synology Sysmika</h4>
     <div class="row g-4">
       <div class="col-md-6">
-        <h4 class="mb-4 lcars-title">Estado del servidor Synology</h4>
-        <div class="row g-4">
-          <div class="col-md-6">
-            <div class="card lcars-card shadow-sm border-warning">
-              <div class="card-body">
-                <h6 class="card-title">Uso de CPU</h6>
-                <canvas id="cpuChart" height="100"></canvas>
-              </div>
-            </div>
+        <div class="card lcars-card shadow-sm border-warning">
+          <div class="card-body">
+            <h6 class="card-title">Uso de CPU</h6>
+            <canvas id="cpuChart" height="100"></canvas>
           </div>
-          <div class="col-md-6">
-            <div class="card lcars-card shadow-sm border-info">
-              <div class="card-body">
-                <h6 class="card-title">Uso de Memoria</h6>
-                <canvas id="ramChart" height="100"></canvas>
-              </div>
-            </div>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="card lcars-card shadow-sm border-info">
+          <div class="card-body">
+            <h6 class="card-title">Uso de Memoria</h6>
+            <canvas id="ramChart" height="100"></canvas>
           </div>
-          <div class="col-md-6">
-            <div class="card lcars-card shadow-sm border-primary">
-              <div class="card-body">
-                <h6 class="card-title">Tráfico de Red</h6>
-                <canvas id="netChart" height="100"></canvas>
-              </div>
-            </div>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="card lcars-card shadow-sm border-primary">
+          <div class="card-body">
+            <h6 class="card-title">Tráfico de Red</h6>
+            <canvas id="netChart" height="100"></canvas>
           </div>
-          <div class="col-md-6">
-            <div class="card lcars-card shadow-sm border-danger">
-              <div class="card-body">
-                <h6 class="card-title">Uso de Disco</h6>
-                <canvas id="diskChart" height="100"></canvas>
-              </div>
-            </div>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="card lcars-card shadow-sm border-danger">
+          <div class="card-body">
+            <h6 class="card-title">Uso de Disco</h6>
+            <canvas id="diskChart" height="100"></canvas>
           </div>
         </div>
       </div>
     </div>
-    <div class="col-md-6"> </div>
   </div>
 </section>

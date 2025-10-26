@@ -21,7 +21,7 @@ try{
    foreach($J_Doc as $k => $doc):  
     $documento  = $doc;
     $RC         = $USERS->full_list('documentos',$W.$k."'");
-    $cadathumb	= glob("../../img/logo/empresa/SYS-16029i/{*.JPG,*.jpg,*.tiff,*.bmp,*.jpeg,*.gif,*.png}",GLOB_BRACE);
+    $cadathumb	= glob("../../../assets/img/logos/{*.JPG,*.jpg,*.tiff,*.bmp,*.jpeg,*.gif,*.png}",GLOB_BRACE);
     
 //print_r($documento);die;
     $pdf = new PDF('P','mm','A4');

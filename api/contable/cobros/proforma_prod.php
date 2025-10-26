@@ -109,6 +109,6 @@ try {
   
 } catch (Throwable $e) {
   error_log('[contable/cobros/proforma_prod] ' . $e->getMessage() . ' @ ' . $e->getFile() . ':' . $e->getLine());
-  //http_response_code(500);
+  http_response_code(500);
   die('Error generando proforma: ' . $e->getMessage());
 }

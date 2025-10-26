@@ -20,6 +20,7 @@ try {
 
   // Autogenerar código si no viene (solo en alta)
   lcars_autocodigo($db, 'prm_trabajos', $input, 'codigo', 'id', 'TRB');
+  
   // Calcular saldo inicial = total
   if (!isset($input['id']) || $input['id'] === 0) {
     $input['saldo'] = $input['total'] ?? 0;
@@ -86,7 +87,7 @@ try {
         'col' => 'estado',
         'type' => 'set',
         'default' => 'pendiente',
-        'syn' => ['pendiente','en_proceso','homologacion','finalizado','entregado','cancelado']
+        'syn' => ['pendiente','en_proceso','finalizado','entregado','cancelado']
       ],
       'prioridad' => [
         'col' => 'prioridad',
@@ -105,17 +106,17 @@ try {
         'default' => 'ARS',
         'max' => 3
       ],
-      'medio_pago' => [
-        'col' => 'medio_pago',
-        'type' => 'str',
-        'nullable' => true,
-        'max' => 50
-      ],
       'saldo' => [
         'col' => 'saldo',
         'type' => 'float',
         'default' => 0.0
       ],
+      'observaciones' => [
+        'col' => 'observaciones',
+        'type' => 'str',
+        'nullable' => true
+      ],
+      // Campos de homologación
       'requiere_homologacion' => [
         'col' => 'requiere_homologacion',
         'type' => 'int',
@@ -125,7 +126,7 @@ try {
         'col' => 'homologacion_url',
         'type' => 'str',
         'nullable' => true,
-        'max' => 255
+        'max' => 500
       ],
       'homologacion_usuario' => [
         'col' => 'homologacion_usuario',
@@ -137,7 +138,7 @@ try {
         'col' => 'homologacion_password',
         'type' => 'str',
         'nullable' => true,
-        'max' => 255
+        'max' => 100
       ],
       'homologacion_notas' => [
         'col' => 'homologacion_notas',
@@ -149,68 +150,160 @@ try {
         'type' => 'set',
         'nullable' => true,
         'syn' => ['pendiente','en_proceso','aprobado','rechazado']
-      ],
-      'observaciones' => [
-        'col' => 'observaciones',
-        'type' => 'str',
-        'nullable' => true
-      ],
-      'archivos_path' => [
-        'col' => 'archivos_path',
-        'type' => 'str',
-        'nullable' => true,
-        'max' => 500
-      ],
-      'orden' => [
-        'col' => 'orden',
-        'type' => 'int',
-        'default' => 0
       ]
     ]
   ];
 
-  // Verificar que el cliente existe
-  $clienteId = (int)($input['cliente_id'] ?? 0);
-  if ($clienteId > 0) {
-    $stmt = $db->prepare("SELECT id FROM clientes WHERE id = ? LIMIT 1");
-    $stmt->bind_param('i', $clienteId);
+  // Guardar trabajo
+  $result = lcars_save($cfg, $input);
+  
+  if (!$result['ok']) {
+    echo json_encode($result);
+    exit;
+  }
+
+  $trabajoId = (int)$result['id'];
+  $esNuevo = $result['created'] ?? false;
+
+  // =====================================================
+  // CREAR COBRO AUTOMÁTICAMENTE
+  // =====================================================
+  // Solo si es nuevo O si es editado pero no tiene cobro
+  
+  $debeCrearCobro = false;
+  
+  if ($esNuevo) {
+    $debeCrearCobro = true;
+  } else {
+    // Verificar si ya existe un cobro para este trabajo
+    $stmt = $db->prepare("
+      SELECT id FROM cnt_cobros 
+      WHERE trabajo_id = ? AND tipo = 'trabajo' 
+      LIMIT 1
+    ");
+    $stmt->bind_param('i', $trabajoId);
     $stmt->execute();
     $stmt->store_result();
+    
     if ($stmt->num_rows === 0) {
-      $stmt->close();
-      http_response_code(400);
-      echo json_encode(['ok' => false, 'error' => 'El cliente seleccionado no existe']);
-      exit;
+      $debeCrearCobro = true;
     }
     $stmt->close();
   }
 
-  // Si viene desde un presupuesto, validar
-  if (isset($input['presupuesto_id']) && $input['presupuesto_id'] > 0) {
-    $stmt = $db->prepare("SELECT id, total, cliente_id FROM cli_presupuestos WHERE id = ? LIMIT 1");
-    $stmt->bind_param('i', $input['presupuesto_id']);
+  if ($debeCrearCobro) {
+    // Obtener datos del trabajo recién guardado
+    $stmt = $db->prepare("
+      SELECT t.*, c.razon_social, c.contacto_nombre
+      FROM prm_trabajos t
+      LEFT JOIN clientes c ON c.id = t.cliente_id
+      WHERE t.id = ?
+      LIMIT 1
+    ");
+    $stmt->bind_param('i', $trabajoId);
     $stmt->execute();
-    $presup = $stmt->get_result()->fetch_assoc();
-    
-    if (!$presup) {
-      http_response_code(400);
-      echo json_encode(['ok' => false, 'error' => 'El presupuesto no existe']);
-      exit;
-    }
-    
-    // Validar que el cliente del trabajo coincida con el del presupuesto
-    if ($presup['cliente_id'] != $clienteId) {
-      http_response_code(400);
-      echo json_encode(['ok' => false, 'error' => 'El cliente no coincide con el del presupuesto']);
-      exit;
+    $trabajo = $stmt->get_result()->fetch_assoc();
+    $stmt->close();
+
+    if ($trabajo) {
+      // Generar código para el cobro
+      $anio = date('Y');
+      $qCodigo = $db->query("
+        SELECT MAX(CAST(SUBSTRING(codigo, 10) AS UNSIGNED)) as ultimo
+        FROM cnt_cobros 
+        WHERE codigo LIKE 'COB-{$anio}-%'
+      ");
+      $rCodigo = $qCodigo->fetch_assoc();
+      $ultimo = (int)($rCodigo['ultimo'] ?? 0);
+      $siguiente = $ultimo + 1;
+      $codigoCobro = sprintf('COB-%s-%05d', $anio, $siguiente);
+
+      // Concepto del cobro
+      $concepto = "Cobro trabajo {$trabajo['codigo']}";
+      if ($trabajo['nombre']) {
+        $concepto .= " - {$trabajo['nombre']}";
+      }
+      if (strlen($concepto) > 200) {
+        $concepto = substr($concepto, 0, 197) . '...';
+      }
+
+      // Datos del cobro
+      $subtotal = (float)$trabajo['total'];
+      $total = $subtotal;
+      $moneda = $trabajo['moneda'] ?? 'ARS';
+      $fechaEmision = $trabajo['fecha_ingreso'] ?? date('Y-m-d');
+      $clienteNombre = $trabajo['razon_social'] ?? $trabajo['contacto_nombre'] ?? 'Cliente';
+
+      // Insertar en cnt_cobros
+      $stmtCobro = $db->prepare("
+        INSERT INTO cnt_cobros (
+          codigo, cliente_id, tipo, concepto, trabajo_id,
+          subtotal, descuento, impuestos, total, moneda,
+          fecha_emision, estado, monto_pagado, saldo,
+          observaciones, activo, orden
+        ) VALUES (?, ?, 'trabajo', ?, ?, ?, 0, 0, ?, ?, ?, 'pendiente', 0, ?, ?, 1, 0)
+      ");
+
+      $observaciones = "Cobro generado automáticamente desde trabajo {$trabajo['codigo']}";
+
+      $stmtCobro->bind_param(
+        'sisiddsds',
+        $codigoCobro,
+        $trabajo['cliente_id'],
+        $concepto,
+        $trabajoId,
+        $subtotal,
+        $total,
+        $moneda,
+        $fechaEmision,
+        $total,
+        $observaciones
+      );
+
+      if ($stmtCobro->execute()) {
+        $cobroId = (int)$db->insert_id;
+        $stmtCobro->close();
+
+        // Insertar item en cnt_cobros_items
+        $itemDesc = $trabajo['nombre'] ?? "Trabajo {$trabajo['codigo']}";
+        if (strlen($itemDesc) > 200) {
+          $itemDesc = substr($itemDesc, 0, 197) . '...';
+        }
+
+        $stmtItem = $db->prepare("
+          INSERT INTO cnt_cobros_items (
+            cobro_id, descripcion, cantidad, precio_unitario,
+            subtotal, alicuota_iva, monto_iva, orden
+          ) VALUES (?, ?, 1, ?, ?, 0, 0, 1)
+        ");
+
+        $stmtItem->bind_param(
+          'isdd',
+          $cobroId,
+          $itemDesc,
+          $subtotal,
+          $subtotal
+        );
+
+        $stmtItem->execute();
+        $stmtItem->close();
+
+        // Agregar info del cobro creado a la respuesta
+        $result['cobro_creado'] = true;
+        $result['cobro_id'] = $cobroId;
+        $result['cobro_codigo'] = $codigoCobro;
+      } else {
+        error_log('[trabajos/save] Error creando cobro: ' . $stmtCobro->error);
+        $stmtCobro->close();
+      }
     }
   }
 
-  $result = lcars_save($cfg, $input);
+  http_response_code($result['created'] ? 201 : 200);
   echo json_encode($result, JSON_UNESCAPED_UNICODE);
 
 } catch (Throwable $e) {
-  error_log('[trabajos/save] ' . $e->getMessage());
+  error_log('[trabajos/save] ' . $e->getMessage() . ' @ ' . $e->getFile() . ':' . $e->getLine());
   http_response_code(500);
   echo json_encode(['ok' => false, 'error' => 'server_error', 'detail' => $e->getMessage()]);
 }

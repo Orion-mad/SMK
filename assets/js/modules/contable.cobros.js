@@ -675,22 +675,15 @@
     try {
       const url = `${API.proforma}?id=${currentCobro.id}&action=download`;
       
-      // Crear link temporal para descargar
-      const link = document.createElement('a');
-      link.href = url;
-      link.download = `proforma_${currentCobro.codigo}.pdf`;
-      link.target = '_blank';
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-
-      alert('Descargando proforma...');
+      // Usar window.open para evitar el bloqueo del router
+      // El navegador se encargará de la descarga automáticamente
+      window.open(url, '_blank');
+      
     } catch (e) {
       console.error('Error descargando proforma', e);
       alert('Error generando la proforma. Intente nuevamente.');
     }
   }
-
   // Enviar proforma por email
   async function emailProforma() {
     if (!currentCobro) {
@@ -725,32 +718,73 @@
     }
   }
 
-  // Enviar proforma por WhatsApp
-  function whatsappProforma() {
-    if (!currentCobro) {
-      alert('No hay un cobro seleccionado');
-      return;
-    }
+// Función para enviar proforma por WhatsApp
+// Permite editar el número antes de enviar
 
-    // Generar mensaje
-    const mensaje = encodeURIComponent(
-      `Hola! Le enviamos la proforma ${currentCobro.codigo}\n` +
-      `Concepto: ${currentCobro.concepto}\n` +
-      `Total: $${money(currentCobro.total)} ${currentCobro.moneda}\n\n` +
-      `Puede descargar el PDF desde: ${window.location.origin}/api/contable/cobros/proforma.php?id=${currentCobro.id}&action=download`
-    );
-
-    // Abrir WhatsApp (si hay teléfono registrado)
-    let phone = currentCobro.cliente_telefono || '';
-    phone = phone.replace(/[^0-9]/g, ''); // Limpiar teléfono
-
-    const url = phone 
-      ? `https://wa.me/${phone}?text=${mensaje}`
-      : `https://wa.me/?text=${mensaje}`;
-
-    window.open(url, '_blank');
+function whatsappProforma() {
+  if (!currentCobro) {
+    alert('No hay un cobro seleccionado');
+    return;
   }
 
+  // Obtener teléfono del cliente (puede estar en telefono o celular)
+  let phone = currentCobro.cliente_celular || currentCobro.cliente_telefono || '';
+  phone = phone.replace(/[^0-9]/g, ''); // Limpiar: solo números
+
+  // SIEMPRE mostrar prompt para editar/confirmar el número
+  const numeroIngresado = prompt(
+    `Número de WhatsApp (con código de país):\n\n` +
+    `Cliente: ${currentCobro.cliente_nombre || 'Sin nombre'}\n` +
+    `Proforma: ${currentCobro.codigo}\n\n` +
+    `Ejemplo: ${phone}`,
+    phone // Valor por defecto (número del cliente)
+  );
+
+  // Si canceló, salir
+  if (numeroIngresado === null) {
+    return;
+  }
+
+  // Limpiar el número ingresado
+  phone = numeroIngresado.trim().replace(/[^0-9]/g, '');
+
+  // Validar que tenga contenido
+  if (!phone) {
+    alert('Debe ingresar un número de teléfono');
+    return;
+  }
+
+  // Validar longitud mínima
+  if (phone.length < 10) {
+    alert('El número de teléfono es demasiado corto.\nVerifique que incluya el código de país.');
+    return;
+  }
+
+  // URL completa del PDF
+  const pdfUrl = window.location.origin + `/api/contable/cobros/proforma.php?id=${currentCobro.id}&action=download`;
+  
+  // Generar mensaje
+  const mensaje = encodeURIComponent(
+    `Hola! Le enviamos la proforma ${currentCobro.codigo}\n\n` +
+    `Cliente: ${currentCobro.cliente_nombre || ''}\n` +
+    `Concepto: ${currentCobro.concepto || ''}\n` +
+    `Total: $${money(currentCobro.total)} ${currentCobro.moneda}\n\n` +
+    `Puede descargar el PDF desde:\n${pdfUrl}`
+  );
+
+  // Abrir WhatsApp con el número editado
+  const url = `https://wa.me/${phone}?text=${mensaje}`;
+  window.open(url, '_blank');
+}
+
+// Función auxiliar para formatear moneda (si no existe en el scope)
+function money(amount) {
+  if (!amount && amount !== 0) return '0.00';
+  return Number(amount).toLocaleString('es-AR', {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
+  });
+}
 
   // Delegación global de eventos
   document.addEventListener('click', (ev) => {

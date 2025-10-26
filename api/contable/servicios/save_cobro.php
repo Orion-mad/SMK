@@ -12,7 +12,7 @@ try {
   $input = json_decode(file_get_contents('php://input'), true);
   
   if (!$input) {
-    http_response_code(400);
+    //http_response_code(400);
     echo json_encode(['ok' => false, 'error' => 'JSON inválido']);
     exit;
   }
@@ -176,7 +176,7 @@ try {
     $stmt->store_result();
     if ($stmt->num_rows === 0) {
       $stmt->close();
-      http_response_code(400);
+      //http_response_code(400);
       echo json_encode(['ok' => false, 'error' => 'El cliente seleccionado no existe']);
       exit;
     }
@@ -192,7 +192,7 @@ try {
     $stmt->store_result();
     if ($stmt->num_rows === 0) {
       $stmt->close();
-      http_response_code(400);
+      //http_response_code(400);
       echo json_encode(['ok' => false, 'error' => 'El servicio seleccionado no existe']);
       exit;
     }
@@ -205,10 +205,10 @@ try {
   }
 
   // Guardar el cobro
-  $result = lcars_crud($cfg, $input);
+  $result = lcars_save($cfg, $input);
 
   if (!$result['ok']) {
-    http_response_code(400);
+    //http_response_code(400);
     echo json_encode($result);
     exit;
   }
@@ -255,6 +255,6 @@ try {
 
 } catch (Throwable $e) {
   error_log('[servicios/save_cobro] ' . $e->getMessage());
-  http_response_code(500);
+  //http_response_code(500);
   echo json_encode(['ok' => false, 'error' => 'server_error', 'detail' => $e->getMessage()]);
 }

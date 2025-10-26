@@ -43,8 +43,10 @@ function lcars_codigo_next($db, string $tabla, string $campo = 'codigo', string 
   // Extraer el número del último código
   // Formato esperado: PREFIJO-0001, PREFIJO-0002, etc.
   if (preg_match('/(\d+)$/', $ultimo_codigo, $matches)) {
-    $ultimo_numero = (int)$matches[1];
-    $nuevo_numero = $ultimo_numero + 1;
+    //$ultimo_numero = (int)$matches[1];
+    //$nuevo_numero = $ultimo_numero + 1;
+    $nuevo_numero = date("y-mdh");
+      
     
     // Mantener el mismo padding (cantidad de dígitos)
     $padding = strlen($matches[1]);

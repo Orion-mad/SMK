@@ -1,5 +1,5 @@
 <?php
-// /api/contable/cobros/email_proforma_prod_v2.php
+// /api/contable/cobros/email_proforma_prod.php
 declare(strict_types=1);
 header('Content-Type: application/json; charset=utf-8');
 
@@ -14,9 +14,6 @@ use PHPMailer\PHPMailer\SMTP;
 use PHPMailer\PHPMailer\Exception;
 
 try {
-  // Cargar configuración
-  $emailConfig = require __DIR__ . '/../../../inc/email_config.php';
-  
   $input = json_decode(file_get_contents('php://input'), true);
   if (!$input) {
     http_response_code(400);
@@ -79,7 +76,7 @@ try {
     exit;
   }
   
-  // Preparar datos
+  // Preparar datos para email y PDF
   $nombreCliente = !empty($row['nombre_fantasia']) ? $row['nombre_fantasia'] : $row['razon_social'];
   $documentoCliente = $row['tipo_doc'] . ': ' . $row['nro_doc'];
   
@@ -119,32 +116,36 @@ try {
   $pdf->generarProforma();
   $pdfContent = $pdf->Output('S'); // Output como string
   
-  // Configurar PHPMailer usando el archivo de configuración
+  // Configurar PHPMailer
   $mail = new PHPMailer(true);
   
   try {
-    // Configuración del servidor SMTP desde config
+    // Configuración del servidor SMTP
     $mail->isSMTP();
-    $mail->Host       = $emailConfig['smtp']['host'];
-    $mail->SMTPAuth   = $emailConfig['smtp']['auth'];
-    $mail->Username   = $emailConfig['smtp']['username'];
-    $mail->Password   = $emailConfig['smtp']['password'];
-    $mail->SMTPSecure = $emailConfig['smtp']['secure'];
-    $mail->Port       = $emailConfig['smtp']['port'];
+    $mail->Host       = 'smtp.gmail.com'; // CAMBIAR por tu servidor SMTP
+    $mail->SMTPAuth   = true;
+    $mail->Username   = 'tu-email@gmail.com'; // CAMBIAR por tu email
+    $mail->Password   = 'tu-password-app'; // CAMBIAR por tu password de app
+    $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+    $mail->Port       = 587;
     
-    // Timeouts desde config
-    $mail->Timeout = $emailConfig['smtp']['timeout'];
-    $mail->SMTPOptions = $emailConfig['smtp']['options'];
+    // IMPORTANTE: Configuración de timeouts
+    $mail->Timeout = 30; // Timeout general (segundos)
+    $mail->SMTPOptions = array(
+      'ssl' => array(
+        'verify_peer' => false,
+        'verify_peer_name' => false,
+        'allow_self_signed' => true
+      )
+    );
     
-    // Debug si está habilitado
-    if ($emailConfig['debug']) {
-      $mail->SMTPDebug = SMTP::DEBUG_SERVER;
-      $mail->Debugoutput = 'error_log';
-    }
+    // Opcional: Debug (comentar en producción)
+    // $mail->SMTPDebug = SMTP::DEBUG_SERVER;
+    // $mail->Debugoutput = 'error_log';
     
-    // Configuración del remitente desde config
-    $mail->setFrom($emailConfig['from']['email'], $emailConfig['from']['name']);
-    $mail->addReplyTo($emailConfig['replyto']['email'], $emailConfig['replyto']['name']);
+    // Configuración del remitente
+    $mail->setFrom('tu-email@gmail.com', 'Tu Empresa'); // CAMBIAR
+    $mail->addReplyTo('info@tuempresa.com', 'Información'); // CAMBIAR
     
     // Destinatario
     $mail->addAddress($emailCliente, $nombreCliente);
@@ -159,10 +160,10 @@ try {
     $mail->Subject = 'Proforma ' . $cobro['codigo'] . ' - ' . $nombreCliente;
     
     // Cuerpo del email en HTML
-    $mail->Body = generarCuerpoEmail($cobro, $cliente, $emailConfig['empresa']);
+    $mail->Body = generarCuerpoEmail($cobro, $cliente);
     
     // Alternativa en texto plano
-    $mail->AltBody = generarCuerpoTextoPlano($cobro, $cliente, $emailConfig['empresa']);
+    $mail->AltBody = generarCuerpoTextoPlano($cobro, $cliente);
     
     // Enviar
     $mail->send();
@@ -184,8 +185,8 @@ try {
   }
   
 } catch (Throwable $e) {
-  error_log('[contable/cobros/email_proforma_prod_v2] ' . $e->getMessage() . ' @ ' . $e->getFile() . ':' . $e->getLine());
-  //http_response_code(500);
+  error_log('[contable/cobros/email_proforma_prod] ' . $e->getMessage() . ' @ ' . $e->getFile() . ':' . $e->getLine());
+  http_response_code(500);
   echo json_encode([
     'ok' => false,
     'error' => 'Error al enviar el email',
@@ -194,7 +195,7 @@ try {
 }
 
 // Función para generar cuerpo del email en HTML
-function generarCuerpoEmail($cobro, $cliente, $empresa) {
+function generarCuerpoEmail($cobro, $cliente) {
   $total = number_format($cobro['total'], 2, ',', '.');
   $fecha = date('d/m/Y', strtotime($cobro['fecha_emision']));
   
@@ -256,6 +257,19 @@ function generarCuerpoEmail($cobro, $cliente, $empresa) {
       font-weight: bold;
       width: 40%;
       color: #555;
+    }
+    .button {
+      display: inline-block;
+      padding: 12px 30px;
+      background: #667eea;
+      color: white;
+      text-decoration: none;
+      border-radius: 5px;
+      margin: 20px 0;
+      text-align: center;
+    }
+    .button:hover {
+      background: #5568d3;
     }
     .note {
       background: #fff3cd;
@@ -322,8 +336,8 @@ function generarCuerpoEmail($cobro, $cliente, $empresa) {
     </div>
     
     <div class="footer">
-      <p><strong>{$empresa['nombre']}</strong></p>
-      <p>{$empresa['telefono']} | {$empresa['email']}</p>
+      <p><strong>Tu Empresa S.A.</strong></p>
+      <p>Tel: (011) XXXX-XXXX | Email: info@tuempresa.com</p>
       <p style="margin-top: 15px; font-style: italic;">Este es un mensaje automático, por favor no responda a este email.</p>
     </div>
   </div>
@@ -333,7 +347,7 @@ HTML;
 }
 
 // Función para generar cuerpo en texto plano
-function generarCuerpoTextoPlano($cobro, $cliente, $empresa) {
+function generarCuerpoTextoPlano($cobro, $cliente) {
   $total = number_format($cobro['total'], 2, ',', '.');
   $fecha = date('d/m/Y', strtotime($cobro['fecha_emision']));
   
@@ -358,8 +372,8 @@ Saludos cordiales,
 Equipo de Administración
 
 ---
-{$empresa['nombre']}
-{$empresa['telefono']} | {$empresa['email']}
+Tu Empresa S.A.
+Tel: (011) XXXX-XXXX | Email: info@tuempresa.com
 
 Este es un mensaje automático, por favor no responda a este email.
 TEXT;
@@ -367,6 +381,7 @@ TEXT;
 
 // Función para registrar el envío (opcional)
 function registrarEnvio($db, $cobro_id, $email_destinatario) {
+  // Opcional: crear una tabla de logs de emails enviados
   try {
     $sql = "
       INSERT INTO cnt_cobros_emails_log (cobro_id, email_destinatario, fecha_envio)
