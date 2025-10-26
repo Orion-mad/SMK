@@ -190,6 +190,9 @@ try {
     }
     $stmt->close();
   }
+    
+  // anulado por que ya exite en contable/cobros un funcion par apasar a cobros
+  $debeCrearCobro = false;
 
   if ($debeCrearCobro) {
     // Obtener datos del trabajo recién guardado

@@ -205,7 +205,7 @@ try {
   }
 
   // Guardar el cobro
-  $result = lcars_save($cfg, $input);
+  $result = lcars_save   ($cfg, $input);
 
   if (!$result['ok']) {
     //http_response_code(400);
