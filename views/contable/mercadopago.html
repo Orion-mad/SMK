@@ -1,0 +1,244 @@
+<!-- /views/contable/mercadopago.html -->
+<section id="contable-mercadopago-main" class="container-fluid py-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <h2 class="mb-0">
+        <i class="bi bi-credit-card-2-front me-2"></i>Mercado Pago
+      </h2>
+      <p class="text-muted mb-0">Movimientos y balance de tu cuenta de Mercado Pago</p>
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb mb-0">
+          <li class="breadcrumb-item"><a href="#/contable">Contable</a></li>
+          <li class="breadcrumb-item active">Mercado Pago</li>
+        </ol>
+      </nav>
+    </div>
+    <div class="d-flex gap-2">
+      <button class="btn btn-outline-primary" id="btn-refresh-mp">
+        <i class="bi bi-arrow-clockwise me-1"></i>Actualizar
+      </button>
+      <a href="#/parametros/mercadopago" class="btn btn-outline-secondary">
+        <i class="bi bi-gear me-1"></i>Configuración
+      </a>
+    </div>
+  </div>
+
+  <!-- Alert container -->
+  <div id="mp-contable-alert"></div>
+
+  <!-- Card: Balance -->
+  <div class="row g-4 mb-4">
+    <div class="col-md-4">
+      <div class="card border-0 shadow-sm rounded-4 bg-primary text-white">
+        <div class="card-body">
+          <div class="d-flex justify-content-between align-items-center">
+            <div>
+              <h6 class="mb-1 opacity-75">Saldo Disponible</h6>
+              <h2 class="mb-0 fw-bold" id="mp-saldo-disponible">$ 0,00</h2>
+            </div>
+            <i class="bi bi-wallet2 fs-1 opacity-50"></i>
+          </div>
+          <small class="opacity-75" id="mp-ultima-actualizacion">Última actualización: --</small>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <div class="card border-0 shadow-sm rounded-4 bg-success text-white">
+        <div class="card-body">
+          <div class="d-flex justify-content-between align-items-center">
+            <div>
+              <h6 class="mb-1 opacity-75">Ingresos del Mes</h6>
+              <h2 class="mb-0 fw-bold" id="mp-ingresos-mes">$ 0,00</h2>
+            </div>
+            <i class="bi bi-arrow-down-circle fs-1 opacity-50"></i>
+          </div>
+          <small class="opacity-75" id="mp-ingresos-count">0 transacciones</small>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <div class="card border-0 shadow-sm rounded-4 bg-danger text-white">
+        <div class="card-body">
+          <div class="d-flex justify-content-between align-items-center">
+            <div>
+              <h6 class="mb-1 opacity-75">Egresos del Mes</h6>
+              <h2 class="mb-0 fw-bold" id="mp-egresos-mes">$ 0,00</h2>
+            </div>
+            <i class="bi bi-arrow-up-circle fs-1 opacity-50"></i>
+          </div>
+          <small class="opacity-75" id="mp-egresos-count">0 transacciones</small>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tabs: Ingresos / Egresos -->
+  <div class="card rounded-4 border-0 shadow-sm">
+    <div class="card-header bg-dark text-white">
+      <ul class="nav nav-tabs card-header-tabs" role="tablist">
+        <li class="nav-item" role="presentation">
+          <button 
+            class="nav-link active" 
+            id="tab-ingresos" 
+            data-bs-toggle="tab" 
+            data-bs-target="#panel-ingresos" 
+            type="button" 
+            role="tab"
+          >
+            <i class="bi bi-arrow-down-circle me-1"></i>Ingresos
+          </button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button 
+            class="nav-link" 
+            id="tab-egresos" 
+            data-bs-toggle="tab" 
+            data-bs-target="#panel-egresos" 
+            type="button" 
+            role="tab"
+          >
+            <i class="bi bi-arrow-up-circle me-1"></i>Egresos
+          </button>
+        </li>
+      </ul>
+    </div>
+
+    <div class="card-body">
+      <!-- Filtros -->
+      <div class="row g-3 mb-4">
+        <div class="col-md-3">
+          <label class="form-label">Desde</label>
+          <input type="date" class="form-control" id="mp-fecha-desde">
+        </div>
+        <div class="col-md-3">
+          <label class="form-label">Hasta</label>
+          <input type="date" class="form-control" id="mp-fecha-hasta">
+        </div>
+        <div class="col-md-4">
+          <label class="form-label">Buscar</label>
+          <input 
+            type="text" 
+            class="form-control" 
+            id="mp-search" 
+            placeholder="Descripción, ID, monto..."
+          >
+        </div>
+        <div class="col-md-2 d-flex align-items-end">
+          <button class="btn btn-primary w-100" id="btn-filtrar-mp">
+            <i class="bi bi-funnel me-1"></i>Filtrar
+          </button>
+        </div>
+      </div>
+
+      <!-- Tabs Content -->
+      <div class="tab-content">
+        
+        <!-- Panel: Ingresos -->
+        <div 
+          class="tab-pane fade show active" 
+          id="panel-ingresos" 
+          role="tabpanel"
+        >
+          <div class="table-responsive">
+            <table class="table table-hover">
+              <thead class="table-light">
+                <tr>
+                  <th>Fecha</th>
+                  <th>ID Operación</th>
+                  <th>Descripción</th>
+                  <th>Tipo</th>
+                  <th class="text-end">Monto</th>
+                  <th>Estado</th>
+                  <th class="text-center">Acciones</th>
+                </tr>
+              </thead>
+              <tbody id="mp-ingresos-tbody">
+                <tr>
+                  <td colspan="7" class="text-center py-4">
+                    <div class="spinner-border text-primary" role="status">
+                      <span class="visually-hidden">Cargando...</span>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          
+          <!-- Paginación -->
+          <nav id="mp-ingresos-pagination" class="d-none">
+            <ul class="pagination justify-content-center">
+              <!-- Generado dinámicamente -->
+            </ul>
+          </nav>
+        </div>
+
+        <!-- Panel: Egresos -->
+        <div 
+          class="tab-pane fade" 
+          id="panel-egresos" 
+          role="tabpanel"
+        >
+          <div class="table-responsive">
+            <table class="table table-hover">
+              <thead class="table-light">
+                <tr>
+                  <th>Fecha</th>
+                  <th>ID Operación</th>
+                  <th>Descripción</th>
+                  <th>Tipo</th>
+                  <th class="text-end">Monto</th>
+                  <th>Estado</th>
+                  <th class="text-center">Acciones</th>
+                </tr>
+              </thead>
+              <tbody id="mp-egresos-tbody">
+                <tr>
+                  <td colspan="7" class="text-center py-4">
+                    <div class="spinner-border text-primary" role="status">
+                      <span class="visually-hidden">Cargando...</span>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Paginación -->
+          <nav id="mp-egresos-pagination" class="d-none">
+            <ul class="pagination justify-content-center">
+              <!-- Generado dinámicamente -->
+            </ul>
+          </nav>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+</section>
+
+<!-- Modal: Detalle de Transacción -->
+<div class="modal fade" id="modal-detalle-transaccion" tabindex="-1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content rounded-4">
+      <div class="modal-header bg-dark text-white">
+        <h5 class="modal-title">
+          <i class="bi bi-info-circle me-2"></i>Detalle de Transacción
+        </h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <div id="detalle-transaccion-content">
+          <!-- Contenido cargado dinámicamente -->
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          Cerrar
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

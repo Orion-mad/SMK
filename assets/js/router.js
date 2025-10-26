@@ -22,6 +22,7 @@
     '#/contable/cobros':                'views/contable/cobros.html',
     '#/contable/trabajos':              'views/contable/trabajos.html',
     '#/contable/servicios':             'views/contable/servicios.html',
+    '#/contable/mercadopago':           'views/contable/mercadopago.html',  
   };
     
   function normalizeHash(h) {

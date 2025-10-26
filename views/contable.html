@@ -1,19 +1,21 @@
-<section class="container-fluid p-3 d-flex flex-column" id="view-contable">
-  <header class="mb-2 d-flex align-items-center justify-content-between">
-    <h1 class="h4 text-uppercase m-0">
-      <span class="badge bg-success me-2">LCARS</span> Módulo Contable
-    </h1>
-  </header>
+<!-- /views/contable.html -->
+<section id="contable-main" class="container-fluid py-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <h2 class="mb-0"><i class="bi bi-calculator me-2"></i>Dashboard Contable</h2>
+      <p class="text-muted mb-0">Resumen general de la situación contable</p>
+    </div>
+  </div>
 
-  <div class="row g-3 flex-grow-1">
-    <div class="col-12">
-      <div class="row g-3">
+  <div class="lcars-frame rounded-4 shadow-lg">
+    <div class="lcars-content p-4">
+      <div class="row g-4">
 
         <!-- Card: Cobros -->
         <div class="col-12 col-lg-6">
           <div class="card lcars-card border-0 shadow-sm rounded-4">
             <div class="card-header bg-dark text-white d-flex align-items-center justify-content-between">
-              <span class="text-uppercase"><i class="bi bi-cash-coin me-2"></i>Cobros y Facturación</span>
+              <span class="text-uppercase"><i class="bi bi-cash-coin me-2"></i>Cobros</span>
               <a href="#/contable/cobros" class="btn btn-sm btn-primary">
                 Abrir <i class="bi bi-arrow-right-short"></i>
               </a>
@@ -115,48 +117,71 @@
         <div class="col-12 col-lg-6">
           <div class="card lcars-card border-0 shadow-sm rounded-4">
             <div class="card-header bg-dark text-white d-flex align-items-center justify-content-between">
-              <span class="text-uppercase"><i class="bi bi-clipboard-check me-2"></i>Trabajos Pendientes de Cobro</span>
+              <span class="text-uppercase"><i class="bi bi-briefcase me-2"></i>Trabajos Pendientes</span>
               <a href="#/contable/trabajos" class="btn btn-sm btn-primary">
-                Ver Todos <i class="bi bi-arrow-right-short"></i>
+                Abrir <i class="bi bi-arrow-right-short"></i>
               </a>
             </div>
             <div class="card-body">
-              <div class="row g-3 align-items-stretch">
-                <div class="col-12 col-md-7">
-                  <div class="row text-center">
-                    <div class="col-6 col-md-4 mb-3">
-                      <div class="fw-semibold">Total</div>
-                      <div class="display-6" id="stat-trabajos-total">—</div>
-                    </div>
-                    <div class="col-6 col-md-4 mb-3">
-                      <div class="fw-semibold">Pendientes</div>
-                      <div class="display-6 text-warning" id="stat-trabajos-pendientes">—</div>
-                    </div>
-                    <div class="col-6 col-md-4 mb-3">
-                      <div class="fw-semibold">En Proceso</div>
-                      <div class="display-6 text-info" id="stat-trabajos-proceso">—</div>
-                    </div>
-                    <div class="col-6 col-md-6 mb-3">
-                      <div class="fw-semibold">Monto Total</div>
-                      <div class="h5 m-0" id="stat-trabajos-monto">—</div>
-                    </div>
-                    <div class="col-6 col-md-6 mb-3">
-                      <div class="fw-semibold">Saldo Pendiente</div>
-                      <div class="h5 m-0 text-danger" id="stat-trabajos-saldo">—</div>
-                    </div>
-                  </div>
+              <div class="row">
+                <div class="col-6">
+                  <div class="fw-semibold">Total</div>
+                  <div class="display-6" id="stat-trabajos-total">—</div>
                 </div>
-                <div class="col-12 col-md-5">
-                  <div class="border rounded-4 p-2 h-100 d-flex flex-column">
-                    <div class="small text-muted">Estado de Trabajos</div>
-                    <canvas id="chart-trabajos-estado" height="160"></canvas>
-                  </div>
+                <div class="col-6">
+                  <div class="fw-semibold">En Proceso</div>
+                  <div class="display-6 text-info" id="stat-trabajos-proceso">—</div>
+                </div>
+              </div>
+              <div class="row mt-3">
+                <div class="col-6">
+                  <div class="fw-semibold">Saldo Total</div>
+                  <div class="h5 text-warning" id="stat-trabajos-saldo">—</div>
+                </div>
+                <div class="col-6">
+                  <div class="fw-semibold">Monto Total</div>
+                  <div class="h5" id="stat-trabajos-monto">—</div>
+                </div>
+              </div>
+              <div class="mt-3 border rounded-4 p-2">
+                <canvas id="chart-trabajos-estado" height="120"></canvas>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card: Mercado Pago -->
+        <div class="col-12 col-lg-6">
+          <div class="card lcars-card border-0 shadow-sm rounded-4">
+            <div class="card-header bg-success text-white d-flex align-items-center justify-content-between">
+              <span class="text-uppercase"><i class="bi bi-credit-card-2-front me-2"></i>Mercado Pago</span>
+              <a href="#/contable/mercadopago" class="btn btn-sm btn-light">
+                Ver Detalle <i class="bi bi-arrow-right-short"></i>
+              </a>
+            </div>
+            <div class="card-body">
+              <div class="alert alert-info mb-3">
+                <i class="bi bi-info-circle me-2"></i>
+                Balance y movimientos de tu cuenta de Mercado Pago
+              </div>
+              <div class="row">
+                <div class="col-12 mb-3">
+                  <div class="fw-semibold">Saldo Disponible</div>
+                  <div class="h3 text-success mb-0" id="stat-mp-saldo">$ 0,00</div>
+                </div>
+                <div class="col-6">
+                  <div class="fw-semibold">Ingresos del Mes</div>
+                  <div class="h5 text-success" id="stat-mp-ingresos">$ 0,00</div>
+                </div>
+                <div class="col-6">
+                  <div class="fw-semibold">Egresos del Mes</div>
+                  <div class="h5 text-danger" id="stat-mp-egresos">$ 0,00</div>
                 </div>
               </div>
             </div>
             <div class="card-footer d-flex justify-content-end gap-2">
-              <a href="#/contable/trabajos" class="btn btn-outline-primary">
-                Gestionar Trabajos
+              <a href="#/contable/mercadopago" class="btn btn-success">
+                <i class="bi bi-list-ul me-1"></i>Ver Movimientos
               </a>
             </div>
           </div>
@@ -172,30 +197,6 @@
               <div class="border rounded-4 p-2">
                 <canvas id="chart-cobros-evolucion" height="180"></canvas>
               </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Card: Pagos (próximamente) -->
-        <div class="col-12 col-lg-6">
-          <div class="card border-0 shadow-sm rounded-4">
-            <div class="card-header bg-dark text-white">
-              <span class="text-uppercase"><i class="bi bi-wallet2 me-2"></i>Pagos y Egresos</span>
-            </div>
-            <div class="card-body">
-              <p class="text-muted m-0">Próximamente: gestión de pagos a proveedores, gastos y egresos.</p>
-            </div>
-          </div>
-        </div>
-
-        <!-- Card: Bancos (próximamente) -->
-        <div class="col-12 col-lg-6">
-          <div class="card border-0 shadow-sm rounded-4">
-            <div class="card-header bg-dark text-white">
-              <span class="text-uppercase"><i class="bi bi-bank me-2"></i>Cuentas Bancarias</span>
-            </div>
-            <div class="card-body">
-              <p class="text-muted m-0">Próximamente: gestión de cuentas bancarias, movimientos y conciliaciones.</p>
             </div>
           </div>
         </div>

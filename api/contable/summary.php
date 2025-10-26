@@ -47,7 +47,6 @@ try {
   // RESUMEN DE SERVICIOS
   // =====================================================
   
-  // Total de clientes con servicios activos
   $q_servicios = $db->query("
     SELECT 
       COUNT(DISTINCT c.id) AS total_clientes,
@@ -79,9 +78,7 @@ try {
     'suspendidos' => 0, 'facturacion_usd' => 0
   ];
 
-  // Estimación aproximada en ARS (cotización fija para el dashboard)
-  // En producción deberías usar tc_get() con fecha actual
-  $tc_aproximado = 1240.00; // Actualizar según necesidad
+  $tc_aproximado = 1240.00;
   
   $servicios = [
     'total_clientes'         => (int)($r_servicios['total_clientes'] ?? 0),
@@ -131,6 +128,33 @@ try {
   ];
 
   // =====================================================
+  // RESUMEN DE MERCADO PAGO
+  // =====================================================
+  
+  $q_mp = $db->query("
+    SELECT 
+      SUM(CASE WHEN tipo = 'ingreso' AND estado = 'approved' THEN monto_neto ELSE 0 END) AS total_ingresos,
+      SUM(CASE WHEN tipo = 'gasto' AND estado = 'approved' THEN monto ELSE 0 END) AS total_gastos,
+      COUNT(CASE WHEN tipo = 'ingreso' THEN 1 ELSE NULL END) AS cantidad_ingresos,
+      COUNT(CASE WHEN tipo = 'gasto' THEN 1 ELSE NULL END) AS cantidad_gastos
+    FROM mp_movimientos
+  ");
+  
+  $r_mp = $q_mp ? $q_mp->fetch_assoc() : [
+    'total_ingresos' => 0, 'total_gastos' => 0,
+    'cantidad_ingresos' => 0, 'cantidad_gastos' => 0
+  ];
+
+  $mercadopago = [
+    'total_ingresos'     => (float)($r_mp['total_ingresos'] ?? 0),
+    'total_gastos'       => (float)($r_mp['total_gastos'] ?? 0),
+    'cantidad_ingresos'  => (int)($r_mp['cantidad_ingresos'] ?? 0),
+    'cantidad_gastos'    => (int)($r_mp['cantidad_gastos'] ?? 0),
+    'saldo_neto'         => (float)($r_mp['total_ingresos'] ?? 0) - (float)($r_mp['total_gastos'] ?? 0),
+    'moneda'             => 'ARS'
+  ];
+
+  // =====================================================
   // EVOLUCIÓN MENSUAL (Últimos 6 meses)
   // =====================================================
   
@@ -154,15 +178,16 @@ try {
   }
 
   // =====================================================
-  // RESPUESTA
+  // RESPUESTA FINAL
   // =====================================================
   
   $response = [
-    'cobros'     => $cobros,
-    'servicios'  => $servicios,
-    'trabajos'   => $trabajos,
-    'evolucion'  => $evolucion,
-    'timestamp'  => date('Y-m-d H:i:s')
+    'cobros'      => $cobros,
+    'servicios'   => $servicios,
+    'trabajos'    => $trabajos,
+    'mercadopago' => $mercadopago,
+    'evolucion'   => $evolucion,
+    'timestamp'   => date('Y-m-d H:i:s')
   ];
 
   http_response_code(200);
@@ -170,7 +195,7 @@ try {
 
 } catch (Throwable $e) {
   error_log('[contable/summary] ' . $e->getMessage() . ' @ ' . $e->getFile() . ':' . $e->getLine());
-  http_response_code(500);
+  //http_response_code(500);
   echo json_encode([
     'error' => 'server_error',
     'detail' => $e->getMessage()
