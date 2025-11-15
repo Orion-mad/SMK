@@ -5,3 +5,5 @@ _notes/
 /bower_components/
 /node_modules/
 /inc/email_config.php
+/inc/conect.php
+orion.sql
