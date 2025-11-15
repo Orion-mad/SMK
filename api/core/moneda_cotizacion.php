@@ -18,6 +18,8 @@ try{
     echo json_encode(['cotizacion' => pesos_a_usd()]);
     exit;
 
+    
+    
 } catch (Throwable $e) {
   error_log('[core/moneda_cotizacion] ' . $e->getMessage());
   http_response_code(500);

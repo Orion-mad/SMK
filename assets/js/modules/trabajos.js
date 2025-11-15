@@ -466,9 +466,19 @@
       
       console.log('Pago registrado OK', result);
     } catch (e) {
-      if (e.data && e.data.error) alert('Error: ' + e.data.error);
-      else alert('Error registrando el pago');
-      console.error('save pago error', e);
+      console.error('save pago error:', e);
+      if (e.data) {
+        console.error('Error data:', e.data);
+        if (e.data.errors) {
+          alert('Error de validación:\n' + e.data.errors.join('\n'));
+        } else if (e.data.error) {
+          alert('Error: ' + e.data.error + (e.data.detail ? '\n' + e.data.detail : ''));
+        } else {
+          alert('Error registrando el pago. Ver consola para detalles.');
+        }
+      } else {
+        alert('Error registrando el pago');
+      }
     }
   }
 

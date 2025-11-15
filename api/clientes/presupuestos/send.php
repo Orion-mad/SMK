@@ -2,8 +2,22 @@
 // /api/clientes/presupuestos/send.php
 declare(strict_types=1);
 header('Content-Type: application/json; charset=utf-8');
-
 require_once __DIR__ . '/../../../inc/conect.php';
+  // Cargar PHPMailer
+  $base = $_SERVER['DOCUMENT_ROOT'] . '/servicios/phpmailer/src/';
+  require_once $base . 'PHPMailer.php';
+  require_once $base . 'SMTP.php';
+  require_once $base . 'Exception.php';
+
+  // Verificar que la clase exista
+  if (!class_exists('\PHPMailer\PHPMailer\PHPMailer')) {
+    throw new Exception('PHPMailer no está cargado o la ruta es incorrecta: ' . $base);
+        echo json_encode(['ok' => false, 'error' => $base, 'detail' => 'PHPMailer no está cargado o la ruta es incorrecta ']);
+
+  }
+
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
 
 try {
   $input = json_decode(file_get_contents('php://input'), true);
@@ -75,16 +89,6 @@ try {
     exit;
   }
 
-  // Cargar PHPMailer
-  $base = $_SERVER['DOCUMENT_ROOT'] . '/servicios/phpmailer/src/';
-  require_once $base . 'PHPMailer.php';
-  require_once $base . 'SMTP.php';
-  require_once $base . 'Exception.php';
-
-  // Verificar que la clase exista
-  if (!class_exists('\PHPMailer\PHPMailer\PHPMailer')) {
-    throw new Exception('PHPMailer no está cargado o la ruta es incorrecta: ' . $base);
-  }
 
   // Función para generar PDF temporal
   function generarPDFTemporal($presupuestoId) {
@@ -98,7 +102,7 @@ try {
 
   try {
     // Crear instancia de PHPMailer
-    $mail = new \PHPMailer\PHPMailer\PHPMailer(true);
+    $mail = new PHPMailer(true);
     
     // Cargar configuración
     $configPath = $_SERVER['DOCUMENT_ROOT'] . '/servicios/phpmailer/mailform.config.json';
@@ -115,9 +119,11 @@ try {
       $mail->isSMTP();
       $mail->Host       = $formConfig['host'] ?? '';
       $mail->Port       = $formConfig['port'] ?? 587;
-      $mail->SMTPAuth   = false;
+      //$mail->SMTPAuth   = true;
+      $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
       $mail->Username   = $formConfig['username'] ?? '';
       $mail->Password   = $formConfig['password'] ?? '';
+    /*
       $mail->SMTPOptions = array(
                                 'ssl' => array(
                                     'verify_peer' => false,
@@ -125,7 +131,7 @@ try {
                                     'allow_self_signed' => true
                                 )
                             );
-      
+    */
       $mail->Timeout = $formConfig['timeout'] ?? 30;
       $mail->CharSet = 'UTF-8';
         //Enable SMTP debugging
@@ -177,13 +183,13 @@ try {
     if (!file_exists($pdfPath)) {
       throw new Exception('No se pudo generar el PDF');
     }
-//$mail->SMTPDebug = 4;
-//echo json_encode(['ok' => false, 'error' => 'server_error', 'detail' => $formConfig]);exit;
+$mail->SMTPDebug = 4;
+echo json_encode(['ok' => false, 'error' => 'server_error', 'detail' => $formConfig]);//exit;
 
     
-    //$clienteNombreLimpio = preg_replace('/[^A-Za-z0-9_\-]/', '_', $presupuesto['razon_social']);
-    //$pdfFilename = 'Presupuesto_' . $clienteNombreLimpio . '_' . $presupuesto['codigo'] . '.pdf';
-    //$mail->addAttachment($pdfPath, $pdfFilename);
+    $clienteNombreLimpio = preg_replace('/[^A-Za-z0-9_\-]/', '_', $presupuesto['cliente_nombre']);
+    $pdfFilename = 'Presupuesto_' . $clienteNombreLimpio . '_' . $presupuesto['codigo'] . '.pdf';
+    $mail->addAttachment($pdfPath, $pdfFilename);
     
     // Enviar email
     $mail->send();
@@ -235,5 +241,5 @@ try {
 } catch (Throwable $e) {
   error_log('[presupuestos/send] ' . $e->getMessage());
   //http_response_code(500);
-  echo json_encode(['ok' => false, 'error' => 'server_error', 'detail' => $e->getMessage()]);
+  echo json_encode(['ok' => false, 'error' => 'server_error', 'detail' => $e->getMessage(), 'base' => $base]);
 }

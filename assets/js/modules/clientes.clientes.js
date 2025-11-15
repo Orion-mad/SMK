@@ -68,6 +68,7 @@
       <td>${c.tipo_doc} ${c.nro_doc}</td>
       <td>${ivaBadge[c.iva_cond] || c.iva_cond}</td>
       <td>${c.email || '-'}</td>
+      <td>${c.celular || '-'}</td>
       <td>${c.servicio_nombre ? '<span class="badge bg-info">' + c.servicio_nombre + '</span>' : '-'}</td>
       <td>${condVentaBadge[c.condicion_venta] || c.condicion_venta}</td>
       <td>${c.estado == 1 ? '<span class="badge bg-success">Activo</span>' : '<span class="badge bg-secondary">Inactivo</span>'}</td>

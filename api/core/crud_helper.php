@@ -42,9 +42,9 @@ function lcars_validate(array $fieldsCfg, array $payload): array {
         break;
 
       case 'set':
-        $val = strtoupper((string)$val);
-        if ($val === '' && $default !== null) $val = strtoupper((string)$default);
-        if ($val === '' && $nullable) $val = strtoupper((string)$nullable);
+        $val = strtolower((string)$val);
+        if ($val === '' && $default !== null) $val = strtolower((string)$default);
+        if ($val === '' && $nullable) $val = strtolower((string)$nullable);
         if (isset($allowed[$val])) $val = $allowed[$val];
         if (is_array($allowed) && !in_array($val, $allowed, true)) {
           if ($required) { $errors[] = "$alias inválido (recibido: '$val', esperado: ".implode('|', $allowed).")"; continue 2; }

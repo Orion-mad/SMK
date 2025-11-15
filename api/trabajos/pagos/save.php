@@ -31,7 +31,7 @@ try {
   $trabajo = $stmt->get_result()->fetch_assoc();
   
   if (!$trabajo) {
-    http_response_code(404);
+   // http_response_code(404);
     echo json_encode(['ok' => false, 'error' => 'Trabajo no encontrado']);
     exit;
   }

@@ -148,6 +148,7 @@ try {
     
     // Destinatario
     $mail->addAddress($emailCliente, $nombreCliente);
+    $mail->addBCC('admin@sysmika.com', "Orion System");
     
     // Adjuntar PDF
     $filename = 'proforma_' . $cobro['codigo'] . '.pdf';

@@ -60,23 +60,66 @@ class DocumentoProforma extends FPDF
         $this->Ln(5);
         
         // Línea separadora
-        $this->SetDrawColor(200, 200, 200);
-        $this->Line(15, $this->GetY(), 195, $this->GetY());
-        $this->Ln(5);
+        
+        $y_start = $this->GetY();
+         if ($this->cobro['estado'] == 'pagado') {
+            $this->SetDrawColor(200, 200, 200);
+            $this->Line(15, $this->GetY(), 195, $this->GetY());
+            $this->Ln(2);
+            $this->SetTextColor(0,150,0);
+            $this->SetX(18, $y_start);
+            $this->SetFont('Arial', 'B', 12);
+            $this->Cell(60, 6, 'PAGADO', 1, 1, 'C');
+            $this->SetTextColor(0, 0, 0);
+            $this->Ln(2);
+        }
+        
+        
     }
     
     // Footer personalizado
     function Footer() {
-        $this->SetY(-20);
+        $this->SetY(-85);
         $this->SetDrawColor(200, 200, 200);
         $this->Line(15, $this->GetY(), 195, $this->GetY());
         $this->Ln(2);
         
+        $this->SetFont('Arial', 'B', 10);
+        // Transferencia Bancaria
+        $this->Cell(95, 10, 'Transferencia Bancaria', 0, 0);
+        // Transferencia MercadoPago
+        $this->Cell(95, 10, 'Transferencia MercadoPago', 0, 0);
+        $this->Ln(5);
+        $this->SetFont('Arial', 'B', 11);
+        $this->Ln(2);
+        $this->Cell(95, 7, 'Cuenta Pesos', 0, 0);
+        $this->SetFont('Arial', '', 11);
+        $this->Cell(95, 7, 'CVU: 0000003100103339214615', 0, 0);
+        $this->Ln(5);
+        $this->Cell(95, 7, 'CBU: 1430001713006474490017', 0, 0);
+        $this->Cell(95, 7, 'Alias: sysmika', 0, 0);
+        $this->Ln(5);
+        $this->Cell(190, 7, 'Alias: miguel.angel.doval', 0, 0);
+        $this->Ln(5);
+        $this->SetFont('Arial', 'B', 11);
+        $this->Cell(190, 7, 'Cuenta Dolar', 0, 0);
+        $this->SetFont('Arial', '', 11);
+        $this->Ln(5);
+        $this->Cell(190, 7, 'CBU: 1430001714006474490025', 0, 0);
+        $this->Ln(5);
+        $this->Cell(190, 7, 'Alias: sysmika.dolar', 0, 0);
+        $this->Ln(5);
+        $this->MultiCell(0, 7, 'Confirmar el pago por mail o whatsapp', 0, 1);
+        
+        $this->SetDrawColor(200, 200, 200);
+        $this->Line(15, $this->GetY(), 195, $this->GetY());
+        $this->Ln(2);
         $this->SetFont('Arial', 'I', 8);
         $this->SetTextColor(100, 100, 100);
         $this->Cell(0, 4, utf8_decode('IMPORTANTE: Este es un comprobante de proforma, no válido como factura fiscal.'), 0, 1, 'C');
         $this->Cell(0, 4, utf8_decode('Una vez efectuado el pago, se emitirá la factura oficial correspondiente.'), 0, 1, 'C');
         $this->Ln(2);
+  
         
         $this->SetFont('Arial', '', 8);
         $this->Cell(0, 4, utf8_decode('Generado el ' . date('d/m/Y H:i') . ' - Página ' . $this->PageNo() . '/{nb}'), 0, 0, 'C');
@@ -95,14 +138,14 @@ class DocumentoProforma extends FPDF
         $this->Rect(15, $y_start, 90, 25);
         $this->Rect(105, $y_start, 90, 25);
         
-        // Columna izquierda - Código
+        // Columna izquierda - Código y Pago realizado
         $this->SetXY(15, $y_start);
         $this->SetFont('Arial', 'B', 9);
         $this->Cell(90, 6, 'CODIGO:', 0, 1, 'L');
         $this->SetX(15);
         $this->SetFont('Arial', '', 12);
         $this->Cell(90, 8, $this->cobro['codigo'], 0, 1, 'L');
-        
+       
         // Columna derecha - Fechas
         $this->SetXY(105, $y_start);
         $this->SetFont('Arial', 'B', 9);

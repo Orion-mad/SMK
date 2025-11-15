@@ -236,7 +236,7 @@
 
 /* ---------- CARDS ---------- */
 .card.lcars-card {
-  background: linear-gradient(145deg, rgba(255,255,255,0.03), rgba(0,0,0,0.4)) var(--lc-panel);
+  background: background: var(--lc-accent-violet);;
   border: 1px solid var(--lc-border);
   color: var(--lc-text-light);
   border-radius: 12px!important;
@@ -281,7 +281,7 @@
   font-weight: 600;
   padding: 0.5rem 1rem;
 }
-.card.lcars-card.violet .card-footer { background: var(--lc-accent-violet); }
+.card.lcars-card.violet .card-footer { background: var(--lc-accent-violet)!important; }
 .card.lcars-card.cyan .card-footer { background: var(--lc-accent-cyan); }
 .card.lcars-card.pink .card-footer { background: var(--lc-accent-pink); }
 

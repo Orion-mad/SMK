@@ -37,6 +37,12 @@ try {
   }
 
   // Formatear respuesta
+    /*
+    'subtotal' => (float)$cobro['subtotal'],
+    'total' => (float)$cobro['total'],
+    'observaciones' => $cobro['observaciones'],
+    */
+    
   $data = [
     'id' => (int)$cobro['id'],
     'codigo' => $cobro['codigo'],
@@ -45,15 +51,12 @@ try {
     'servicio_id' => (int)$cobro['servicio_id'],
     'tipo' => $cobro['tipo'],
     'concepto' => $cobro['concepto'],
-    'subtotal' => (float)$cobro['subtotal'],
     'descuento' => (float)$cobro['descuento'],
     'impuestos' => (float)$cobro['impuestos'],
-    'total' => (float)$cobro['total'],
     'moneda' => $cobro['moneda'],
     'fecha_emision' => $cobro['fecha_emision'],
     'fecha_vencimiento' => $cobro['fecha_vencimiento'],
     'estado' => $cobro['estado'],
-    'observaciones' => $cobro['observaciones'],
     'creado_en' => $cobro['creado_en'],
     'actualizado_en' => $cobro['actualizado_en']
   ];

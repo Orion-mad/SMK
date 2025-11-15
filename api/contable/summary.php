@@ -4,6 +4,7 @@ declare(strict_types=1);
 header('Content-Type: application/json; charset=utf-8');
 
 require_once __DIR__ . '/../../inc/conect.php';
+require_once __DIR__ . '/servicios/get_tc.php';
 
 try {
   $db = DB::get();
@@ -78,7 +79,7 @@ try {
     'suspendidos' => 0, 'facturacion_usd' => 0
   ];
 
-  $tc_aproximado = 1240.00;
+  $tc_aproximado = pesos_a_usd();
   
   $servicios = [
     'total_clientes'         => (int)($r_servicios['total_clientes'] ?? 0),
@@ -133,10 +134,10 @@ try {
   
   $q_mp = $db->query("
     SELECT 
-      SUM(CASE WHEN tipo = 'ingreso' AND estado = 'approved' THEN monto_neto ELSE 0 END) AS total_ingresos,
-      SUM(CASE WHEN tipo = 'gasto' AND estado = 'approved' THEN monto ELSE 0 END) AS total_gastos,
-      COUNT(CASE WHEN tipo = 'ingreso' THEN 1 ELSE NULL END) AS cantidad_ingresos,
-      COUNT(CASE WHEN tipo = 'gasto' THEN 1 ELSE NULL END) AS cantidad_gastos
+      SUM(CASE WHEN status_detail = 'ingreso' AND status = 'approved' THEN net_amount ELSE 0 END) AS total_ingresos,
+      SUM(CASE WHEN status_detail = 'gasto' AND status = 'approved' THEN net_amount ELSE 0 END) AS total_gastos,
+      COUNT(CASE WHEN status_detail = 'ingreso' THEN 1 ELSE NULL END) AS cantidad_ingresos,
+      COUNT(CASE WHEN status_detail = 'gasto' THEN 1 ELSE NULL END) AS cantidad_gastos
     FROM mp_movimientos
   ");
   

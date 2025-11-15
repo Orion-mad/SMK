@@ -42,9 +42,9 @@
 
   function rowTpl(s) {
     return `<tr data-id="${s.id}">
-      <td>${s.id}</td>
-      <td class="fw-semibold">${s.codigo}</td>
-      <td>${s.nombre}</td>
+      <td class="text-start">${s.id}</td>
+      <td class="fw-semibold text-start">${s.codigo}</td>
+      <td class="text-start">${s.nombre}</td>
       <td><span class="badge bg-info">${s.plan_nombre || 'N/A'}</span></td>
       <td class="text-end fw-bold">$${money(s.precio_usd)}</td>
       <td><span class="badge bg-secondary">${s.tipo_cobro}</span></td>

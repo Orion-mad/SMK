@@ -111,6 +111,11 @@ try {
         'type' => 'float',
         'default' => 0.0
       ],
+      'medio_pago' => [
+        'col' => 'medio_pago',
+        'type' => 'str',
+        'default' => 'Efectivo'
+      ],
       'observaciones' => [
         'col' => 'observaciones',
         'type' => 'str',

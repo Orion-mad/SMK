@@ -61,11 +61,11 @@
       : '<i class="bi bi-plus-circle me-1"></i>Crear Cobro';
 
     return `<tr data-cliente-id="${item.cliente_id}" data-servicio-id="${item.servicio_id}">
-      <td>
+      <td class="text-start">
         <div class="fw-semibold">${item.cliente_nombre}</div>
         <small class="text-muted">${item.cliente_doc}</small>
       </td>
-      <td>
+      <td class="text-start">
         <div>${item.servicio_nombre}</div>
         <small class="text-muted">${item.servicio_codigo}</small>
       </td>
@@ -214,6 +214,7 @@
       const cobro = await fetchJSON(API.getCobro(clienteId, servicioId));
       
       if (cobro) {
+    const totalARS = ((subtotalARS + cobro.impuestos) - cobro.descuento).toFixed(2);
         document.querySelector('#modal-title-text').textContent = 'Editar Cobro';
         document.querySelector('#cobro-id').value = cobro.id;
         document.querySelector('#cobro-codigo').value = cobro.codigo || '';
@@ -222,11 +223,11 @@
         document.querySelector('#cobro-fecha-emision').value = cobro.fecha_emision || '';
         document.querySelector('#cobro-fecha-vencimiento').value = cobro.fecha_vencimiento || '';
         document.querySelector('#cobro-estado').value = cobro.estado || 'pendiente';
-        document.querySelector('#cobro-subtotal').value = cobro.subtotal || '0';
+        document.querySelector('#cobro-subtotal').value = subtotalARS || '0';
         document.querySelector('#cobro-descuento').value = cobro.descuento || '0';
         document.querySelector('#cobro-impuestos').value = cobro.impuestos || '0';
-        document.querySelector('#cobro-total').value = cobro.total || '0';
-        document.querySelector('#cobro-observaciones').value = cobro.observaciones || '';
+        document.querySelector('#cobro-total').value = totalARS|| '0';
+        document.querySelector('#cobro-observaciones').value = obsAuto || '0';
       } else {
         document.querySelector('#modal-title-text').textContent = 'Nuevo Cobro';
       }

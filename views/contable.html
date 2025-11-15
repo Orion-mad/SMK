@@ -16,7 +16,7 @@
           <div class="card lcars-card border-0 shadow-sm rounded-4">
             <div class="card-header bg-dark text-white d-flex align-items-center justify-content-between">
               <span class="text-uppercase"><i class="bi bi-cash-coin me-2"></i>Cobros</span>
-              <a href="#/contable/cobros" class="btn btn-sm btn-primary">
+              <a href="#/contable/cobros" class="btn btn-sm btn-success">
                 Abrir <i class="bi bi-arrow-right-short"></i>
               </a>
             </div>
@@ -55,7 +55,7 @@
               </div>
             </div>
             <div class="card-footer d-flex justify-content-end gap-2">
-              <a href="#/contable/cobros" class="btn btn-outline-primary">
+              <a href="#/contable/cobros" class="btn btn-outline-success">
                 Gestionar Cobros
               </a>
             </div>
@@ -67,7 +67,7 @@
           <div class="card lcars-card border-0 shadow-sm rounded-4">
             <div class="card-header bg-dark text-white d-flex align-items-center justify-content-between">
               <span class="text-uppercase"><i class="bi bi-hdd-network me-2"></i>Cobros de Servicios</span>
-              <a href="#/contable/servicios" class="btn btn-sm btn-primary">
+              <a href="#/contable/servicios" class="btn btn-sm btn-success">
                 Abrir <i class="bi bi-arrow-right-short"></i>
               </a>
             </div>
@@ -106,7 +106,7 @@
               </div>
             </div>
             <div class="card-footer d-flex justify-content-end gap-2">
-              <a href="#/contable/servicios" class="btn btn-outline-primary">
+              <a href="#/contable/servicios" class="btn btn-outline-success">
                 Gestionar Servicios
               </a>
             </div>
@@ -115,47 +115,47 @@
 
         <!-- Card: Trabajos Pendientes -->
         <div class="col-12 col-lg-6">
-          <div class="card lcars-card border-0 shadow-sm rounded-4">
+          <div class="card lcars-card">
             <div class="card-header bg-dark text-white d-flex align-items-center justify-content-between">
               <span class="text-uppercase"><i class="bi bi-briefcase me-2"></i>Trabajos Pendientes</span>
-              <a href="#/contable/trabajos" class="btn btn-sm btn-primary">
+              <a href="#/contable/trabajos" class="btn btn-sm btn-success">
                 Abrir <i class="bi bi-arrow-right-short"></i>
               </a>
             </div>
             <div class="card-body">
               <div class="row">
-                <div class="col-6">
+                <div class="col-4">
                   <div class="fw-semibold">Total</div>
                   <div class="display-6" id="stat-trabajos-total">—</div>
-                </div>
-                <div class="col-6">
-                  <div class="fw-semibold">En Proceso</div>
-                  <div class="display-6 text-info" id="stat-trabajos-proceso">—</div>
-                </div>
-              </div>
-              <div class="row mt-3">
-                <div class="col-6">
                   <div class="fw-semibold">Saldo Total</div>
                   <div class="h5 text-warning" id="stat-trabajos-saldo">—</div>
                 </div>
-                <div class="col-6">
+                <div class="col-4">
+                  <div class="fw-semibold">En Proceso</div>
+                  <div class="display-6 text-info" id="stat-trabajos-proceso">—</div>
                   <div class="fw-semibold">Monto Total</div>
                   <div class="h5" id="stat-trabajos-monto">—</div>
                 </div>
-              </div>
-              <div class="mt-3 border rounded-4 p-2">
-                <canvas id="chart-trabajos-estado" height="120"></canvas>
+                <div class="col-4 border rounded-4 p-2">
+                <canvas id="chart-trabajos-estado"></canvas>
+                </div>
               </div>
             </div>
+            <div class="card-footer d-flex justify-content-end gap-2">
+              <a href="#/contable/trabajos" class="btn btn-outline-success">
+                Gestionar Trabajos
+              </a>
+            </div>
+              
           </div>
         </div>
 
         <!-- Card: Mercado Pago -->
         <div class="col-12 col-lg-6">
-          <div class="card lcars-card border-0 shadow-sm rounded-4">
-            <div class="card-header bg-success text-white d-flex align-items-center justify-content-between">
+          <div class="card lcars-card lcars-card.violet border-0 shadow-sm rounded-4">
+            <div class="card-header bg-dark text-white d-flex align-items-center justify-content-between">
               <span class="text-uppercase"><i class="bi bi-credit-card-2-front me-2"></i>Mercado Pago</span>
-              <a href="#/contable/mercadopago" class="btn btn-sm btn-light">
+              <a href="#/contable/mercadopago" class="btn btn-sm btn-success">
                 Ver Detalle <i class="bi bi-arrow-right-short"></i>
               </a>
             </div>
@@ -180,7 +180,7 @@
               </div>
             </div>
             <div class="card-footer d-flex justify-content-end gap-2">
-              <a href="#/contable/mercadopago" class="btn btn-success">
+              <a href="#/contable/mercadopago" class="btn btn-outline-success">
                 <i class="bi bi-list-ul me-1"></i>Ver Movimientos
               </a>
             </div>

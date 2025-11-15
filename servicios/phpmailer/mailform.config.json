@@ -4,5 +4,6 @@
   "port": 465,
   "username": "noreply@sysmika.com",
   "password": "0800miguel60",
-  "recipientEmail": "admin@sysmika.com"
+  "recipientEmail": "admin@sysmika.com",
+  "timeout": 15
 }
