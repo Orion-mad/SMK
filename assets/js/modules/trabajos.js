@@ -23,8 +23,19 @@
   async function fetchJSON(url, opts) {
     const r = await fetch(url, Object.assign({ credentials: 'same-origin' }, opts));
     if (r.status === 204) return null;
-    const data = await r.json().catch(() => null);
-    if (!r.ok) throw { status: r.status, data };
+    const data = await r.json().catch((e) => {
+      console.error('Error parsing JSON from:', url, 'Status:', r.status, 'Parse error:', e);
+      return null;
+    });
+    // Si el servidor devuelve un objeto con ok: false, lo devolvemos tal cual
+    // para que cada función maneje el error como quiera
+    if (data && data.ok === false) {
+      return data;
+    }
+    // Solo lanzar error si no hay data o si r.ok es false y no hay data.ok
+    if (!r.ok && (!data || data.ok !== false)) {
+      throw { status: r.status, data };
+    }
     return data;
   }
 
@@ -447,6 +458,18 @@
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
       });
+
+      if (!result.ok) {
+        if (result.errors) {
+          alert('Error de validación:\n' + result.errors.join('\n'));
+        } else if (result.error) {
+          alert('Error: ' + result.error + (result.detail ? '\n' + result.detail : ''));
+        } else {
+          alert('Error registrando el pago');
+        }
+        console.error('Error guardando pago:', result);
+        return;
+      }
 
       // Recargar el trabajo para actualizar la lista de pagos
       const t = await fetchJSON(API.get(trabajoId));

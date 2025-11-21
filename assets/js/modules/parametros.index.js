@@ -31,8 +31,8 @@
 
   // ---------- Charts handling ----------
   let charts = { planesEstado: null, planesPrecios: null,estado: null, precios: null, serviciosEstado: null, conceptosCategorias: null };
-    
-    
+  let isLoading = false;
+
   function destroyCharts() {
     Object.keys(charts).forEach(k => {
       if (charts[k]) {
@@ -156,8 +156,9 @@
   }
 
   async function loadSummary() {
-    if (!here()) return;
+    if (!here() || isLoading) return;
 
+    isLoading = true;
     console.log('📊 Cargando resumen de parámetros...');
 
     try {
@@ -210,22 +211,20 @@
     } catch (e) {
       console.error('❌ Error cargando summary:', e);
       destroyCharts();
-      
+
       // Mostrar mensaje de error en la UI
       const elPlanesTotal = $id('stat-planes-total');
       if (elPlanesTotal) elPlanesTotal.textContent = 'Error';
+    } finally {
+      isLoading = false;
     }
   }
 
   // Bootstrap y navegación
   const bootSummary = () => {
-    console.log('🔄 bootSummary ejecutado, hash:', location.hash);
-    
     if (here()) {
-      console.log('✅ Estamos en #/parametros');
       loadSummary();
     } else {
-      console.log('ℹ️ No estamos en #/parametros, limpiando gráficos...');
       // Limpiar gráficos si salimos de la vista
       if (charts.planesEstado || charts.planesPrecios || charts.serviciosEstado) {
         destroyCharts();
@@ -237,7 +236,4 @@
   window.addEventListener('hashchange', bootSummary);
   document.addEventListener('DOMContentLoaded', bootSummary);
   document.addEventListener('orion:navigate', bootSummary);
-  
-  console.log('✅ Módulo parametros.index.js cargado correctamente');
-  console.log('📍 Hash actual:', location.hash);
 })();

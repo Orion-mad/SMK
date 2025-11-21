@@ -9,8 +9,8 @@
   };
 
   function here() {
-    const isHere = location.hash.replace(/\/+$/, '') === '#/clientes';
-    return isHere;
+    const normalized = location.hash.replace(/\/+$/, '').replace(/\?.*$/, '');
+    return normalized === '#/clientes';
   }
 
   async function fetchJSON(url, opts) {
@@ -37,6 +37,8 @@
     trabajosPrioridad: null
   };
 
+  let isLoading = false;
+
   function destroyCharts() {
     Object.keys(charts).forEach(k => {
       if (charts[k] && typeof charts[k].destroy === 'function') charts[k].destroy();
@@ -47,6 +49,12 @@
   function drawChartClientesEstado(data) {
     const ctx = document.getElementById('chart-clientes-estado');
     if (!ctx || !window.Chart) return;
+
+    // Destruir gráfico existente si existe
+    if (charts.clientesEstado) {
+      charts.clientesEstado.destroy();
+      charts.clientesEstado = null;
+    }
 
     charts.clientesEstado = new Chart(ctx, {
       type: 'doughnut',
@@ -79,6 +87,12 @@
   function drawChartPresupuestosEstado(data) {
     const ctx = document.getElementById('chart-presupuestos-estado');
     if (!ctx || !window.Chart) return;
+
+    // Destruir gráfico existente si existe
+    if (charts.presupuestosEstado) {
+      charts.presupuestosEstado.destroy();
+      charts.presupuestosEstado = null;
+    }
 
     charts.presupuestosEstado = new Chart(ctx, {
       type: 'doughnut',
@@ -117,6 +131,12 @@
     const ctx = document.getElementById('chart-trabajos-estado');
     if (!ctx || !window.Chart) return;
 
+    // Destruir gráfico existente si existe
+    if (charts.trabajosEstado) {
+      charts.trabajosEstado.destroy();
+      charts.trabajosEstado = null;
+    }
+
     charts.trabajosEstado = new Chart(ctx, {
       type: 'doughnut',
       data: {
@@ -154,6 +174,12 @@
   function drawChartTrabajosPrioridad(data) {
     const ctx = document.getElementById('chart-trabajos-prioridad');
     if (!ctx || !window.Chart) return;
+
+    // Destruir gráfico existente si existe
+    if (charts.trabajosPrioridad) {
+      charts.trabajosPrioridad.destroy();
+      charts.trabajosPrioridad = null;
+    }
 
     charts.trabajosPrioridad = new Chart(ctx, {
       type: 'bar',
@@ -376,26 +402,45 @@
   }
 
   async function loadAll() {
-    if (!here()) {
+    if (!here() || isLoading) {
       return;
     }
 
+    isLoading = true;
     destroyCharts();
 
-    await Promise.all([
-      loadSummaryClientes(),
-      loadSummaryDominios(),
-      loadSummaryPresupuestos(),
-      loadSummaryTrabajos(),
-      loadAlertasClientesInactivos()
-    ]);
-
-
+    try {
+      await Promise.all([
+        loadSummaryClientes(),
+        loadSummaryDominios(),
+        loadSummaryPresupuestos(),
+        loadSummaryTrabajos(),
+        loadAlertasClientesInactivos()
+      ]);
+    } finally {
+      isLoading = false;
+    }
   }
 
   const boot = () => {
     if (here()) {
-      loadAll();
+      // Verificar que el elemento principal del DOM esté presente antes de cargar
+      let attempts = 0;
+      const maxAttempts = 50; // ~1 segundo máximo (50 frames a 60fps)
+
+      const checkAndLoad = () => {
+        const viewElement = document.getElementById('view-clientes');
+        if (viewElement) {
+          loadAll();
+        } else if (attempts < maxAttempts) {
+          // Si el DOM aún no está listo, reintentamos en el siguiente frame
+          attempts++;
+          requestAnimationFrame(checkAndLoad);
+        } else {
+          console.warn('clientes.index: Timeout esperando que el DOM esté listo');
+        }
+      };
+      checkAndLoad();
     } else {
       destroyCharts();
     }

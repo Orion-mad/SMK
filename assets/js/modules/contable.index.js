@@ -26,6 +26,7 @@
   }
 
   let charts = { cobrosEstado: null, cobrosEvolucion: null, serviciosEstado: null, trabajosEstado: null };
+  let isLoading = false;
 
   function destroyCharts() {
     Object.keys(charts).forEach(k => {
@@ -37,6 +38,12 @@
   function drawChartCobrosEstado(data) {
     const ctx = document.getElementById('chart-cobros-estado');
     if (!ctx || !window.Chart) return;
+
+    // Destruir gráfico existente si existe
+    if (charts.cobrosEstado) {
+      charts.cobrosEstado.destroy();
+      charts.cobrosEstado = null;
+    }
 
     charts.cobrosEstado = new Chart(ctx, {
       type: 'doughnut',
@@ -72,6 +79,12 @@
     const ctx = document.getElementById('chart-servicios-estado');
     if (!ctx || !window.Chart) return;
 
+    // Destruir gráfico existente si existe
+    if (charts.serviciosEstado) {
+      charts.serviciosEstado.destroy();
+      charts.serviciosEstado = null;
+    }
+
     charts.serviciosEstado = new Chart(ctx, {
       type: 'doughnut',
       data: {
@@ -103,6 +116,12 @@
   function drawChartTrabajosEstado(data) {
     const ctx = document.getElementById('chart-trabajos-estado');
     if (!ctx || !window.Chart) return;
+
+    // Destruir gráfico existente si existe
+    if (charts.trabajosEstado) {
+      charts.trabajosEstado.destroy();
+      charts.trabajosEstado = null;
+    }
 
     charts.trabajosEstado = new Chart(ctx, {
       type: 'doughnut',
@@ -139,6 +158,12 @@
 
     if (!data || data.length === 0) {
       return;
+    }
+
+    // Destruir gráfico existente si existe
+    if (charts.cobrosEvolucion) {
+      charts.cobrosEvolucion.destroy();
+      charts.cobrosEvolucion = null;
     }
 
     const meses = data.map(m => m.mes);
@@ -217,8 +242,14 @@
   }
 
   async function loadAll() {
-    if (!here()) return;
-    await loadSummary();
+    if (!here() || isLoading) return;
+
+    isLoading = true;
+    try {
+      await loadSummary();
+    } finally {
+      isLoading = false;
+    }
   }
 
   const boot = () => {

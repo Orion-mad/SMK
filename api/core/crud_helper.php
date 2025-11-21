@@ -104,7 +104,6 @@ function lcars_save(array $cfg, array $payload): array {
   [$cols, $errors] = lcars_validate($fieldsCfg, $payload);
   
   if ($errors) {
-    http_response_code(400);
     return ['ok'=>false, 'errors'=>$errors, 'validation_failed' => true];
   }
 
@@ -147,7 +146,6 @@ function lcars_save(array $cfg, array $payload): array {
           
           if ($stmtU->num_rows > 0) {
             $db->rollback();
-            http_response_code(409);
             return ['ok'=>false, 'error'=>'duplicado', 'field'=>$key];
           }
           $stmtU->free_result();
@@ -169,7 +167,6 @@ function lcars_save(array $cfg, array $payload): array {
         
         if ($stmtU->num_rows > 0) {
           $db->rollback();
-          http_response_code(409);
           return ['ok'=>false, 'error'=>'duplicado', 'field'=>$alias];
         }
         $stmtU->free_result(); 
@@ -299,7 +296,6 @@ function lcars_save(array $cfg, array $payload): array {
     }
 
     $db->commit();
-    http_response_code($created ? 201 : 200);
     return ['ok'=>true, 'id'=>$id, 'created'=>$created, 'syn'=>$types, 'vals'=>$vals];
     
   } catch (Throwable $e) {
@@ -338,12 +334,10 @@ function lcars_delete(array $cfg, int $id): array {
 
     if ($affected !== 1) {
       $db->rollback();
-      http_response_code(404);
       return ['ok'=>false, 'error'=>'no_encontrado'];
     }
 
     $db->commit();
-    http_response_code(204); // sin body
     return ['ok'=>true];
     
   } catch (Throwable $e) {

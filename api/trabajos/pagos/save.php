@@ -10,7 +10,6 @@ try {
   $input = json_decode(file_get_contents('php://input'), true);
   
   if (!$input) {
-    http_response_code(400);
     echo json_encode(['ok' => false, 'error' => 'JSON inválido']);
     exit;
   }
@@ -20,7 +19,6 @@ try {
   // Verificar que el trabajo existe
   $trabajoId = (int)($input['trabajo_id'] ?? 0);
   if ($trabajoId <= 0) {
-    http_response_code(400);
     echo json_encode(['ok' => false, 'error' => 'trabajo_id requerido']);
     exit;
   }
@@ -31,7 +29,6 @@ try {
   $trabajo = $stmt->get_result()->fetch_assoc();
   
   if (!$trabajo) {
-   // http_response_code(404);
     echo json_encode(['ok' => false, 'error' => 'Trabajo no encontrado']);
     exit;
   }
@@ -39,9 +36,8 @@ try {
   // Validar que el monto no exceda el saldo
   $monto = (float)($input['monto'] ?? 0);
   if ($monto > $trabajo['saldo'] && $input['estado'] === 'confirmado') {
-    http_response_code(400);
     echo json_encode([
-      'ok' => false, 
+      'ok' => false,
       'error' => 'El monto excede el saldo pendiente',
       'saldo_actual' => $trabajo['saldo']
     ]);
@@ -138,22 +134,34 @@ try {
     ]
   ];
 
+  // DEBUG: Log del input recibido
+  error_log('[trabajos/pagos/save] Input: ' . json_encode($input));
+
   $result = lcars_save($cfg, $input);
-  
+
+  // DEBUG: Log del resultado
+  error_log('[trabajos/pagos/save] Result: ' . json_encode($result));
+
   // Si se guardó correctamente, devolver el trabajo actualizado
   if ($result['ok']) {
     $stmt = $db->prepare("SELECT total, saldo FROM prm_trabajos WHERE id = ?");
     $stmt->bind_param('i', $trabajoId);
     $stmt->execute();
     $trabajoActualizado = $stmt->get_result()->fetch_assoc();
-    
+
     $result['trabajo_actualizado'] = $trabajoActualizado;
+  } else {
+    // DEBUG: Agregar información del input para debugging
+    $result['debug_input'] = $input;
+    $result['debug_cfg'] = [
+      'table' => $cfg['table'],
+      'fields_keys' => array_keys($cfg['fields'])
+    ];
   }
-  
+
   echo json_encode($result, JSON_UNESCAPED_UNICODE);
 
 } catch (Throwable $e) {
   error_log('[trabajos/pagos/save] ' . $e->getMessage());
-  http_response_code(500);
   echo json_encode(['ok' => false, 'error' => 'server_error', 'detail' => $e->getMessage()]);
 }
